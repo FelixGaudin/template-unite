@@ -9,9 +9,10 @@
 # depuis /admin sont écrites directement sur ta machine, et le site se
 # reconstruit tout seul.
 #
-# Un seul service, qui lance les deux processus dont l’administration a besoin
-# (le site sur 8080, le pont d’écriture sur 8081). Ils sont indissociables :
-# séparer les deux n’apportait rien et compliquait le démarrage.
+# Tout passe par le port 8080, y compris l’API d’écriture de l’administration.
+# Le pont qui l’assure n’écoute que sur la machine locale, à l’intérieur du
+# conteneur : il n’y a donc qu’un seul port à ouvrir, et l’API ne peut pas être
+# appelée en contournant le mot de passe.
 
 services:
   site:
@@ -20,8 +21,7 @@ services:
       target: developpement
     command: npm run dev
     ports:
-      - '8080:8080' # le site et /admin
-      - '8081:8081' # le pont utilisé par /admin pour écrire
+      - '8080:8080'
     volumes:
       - .:/site
       # Les dépendances installées dans l’image ne doivent pas être masquées par
@@ -35,19 +35,21 @@ services:
     # `npm run dev` sont alors correctement arrêtés et nettoyés.
     init: true
     environment:
-      # Le pont n’accepte par défaut que les requêtes venant de `localhost` et de
-      # `127.0.0.1`. Pour ouvrir l’administration depuis une autre machine, il
-      # faut lui indiquer l’adresse exacte du site — sinon le navigateur bloque
-      # sa réponse et l’administration retombe sur la connexion GitHub.
+      # Protège /admin **et** son API par un mot de passe. Laissé vide,
+      # l’administration est ouverte — acceptable sur son propre ordinateur,
+      # jamais sur une machine accessible par d’autres.
       #
-      # Attention : ce mode n’a aucun mot de passe. Lis la section « Héberger
-      # l’administration sur un serveur » du README avant de t’en servir.
+      # Le mot de passe se donne au lancement, pour ne pas se retrouver dans un
+      # fichier versionné :
       #
-      # Se renseigne au lancement, sans modifier ce fichier :
-      #   ORIGIN='https://adresse-du-serveur:8080' docker compose up
-      ORIGIN: '${ORIGIN:-}'
+      #   ADMIN_MOT_DE_PASSE='choisis-un-mot-de-passe' docker compose up
+      #
+      # Ou dans un fichier `.env` à côté de ce fichier, qui n’est pas versionné.
+      ADMIN_MOT_DE_PASSE: '${ADMIN_MOT_DE_PASSE:-}'
+      # L’identifiant à saisir avec le mot de passe. « admin » par défaut.
+      ADMIN_UTILISATEUR: '${ADMIN_UTILISATEUR:-admin}'
 
-  # Pour ne servir que le site public, sans le pont d’écriture :
+  # Pour ne servir que le site public, sans l’administration :
   #   docker compose run --rm --service-ports site npm start
 
 volumes:

@@ -33,8 +33,10 @@ RUN npm ci
 FROM dependances AS developpement
 
 ENV NODE_ENV=development
-EXPOSE 8080 8081
-CMD ["npm", "start"]
+# Un seul port : le site, l’administration et son API passent tous par là.
+# Le pont d’écriture n’écoute que sur la machine locale du conteneur.
+EXPOSE 8080
+CMD ["npm", "run", "dev"]
 
 # ──────────────────────────────── Construction ───────────────────────────────
 FROM dependances AS construction

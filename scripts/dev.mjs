@@ -18,10 +18,22 @@ import { fileURLToPath } from 'node:url';
 const RACINE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const surWindows = process.platform === 'win32';
 
+const PORT_PONT = process.env.PONT_PORT || '8082';
+
 const processus = [
     { nom: 'site', commande: 'npx', args: ['eleventy', '--serve'] },
-    // Le pont écrit dans les fichiers du dépôt : il doit tourner depuis sa racine.
-    { nom: 'admin', commande: 'npx', args: ['decap-server'] },
+    {
+        // Le pont écrit dans les fichiers du dépôt : il doit tourner depuis sa racine.
+        //
+        // Il n’écoute que sur la machine locale : c’est le serveur du site qui
+        // lui transmet les appels, sur le même port que le reste. Rien à ouvrir
+        // de plus sur un serveur, et l’API n’est pas joignable en contournant
+        // la protection par mot de passe.
+        nom: 'admin',
+        commande: 'npx',
+        args: ['decap-server'],
+        env: { PORT: PORT_PONT, BIND_HOST: '127.0.0.1' },
+    },
 ];
 
 let onSArrete = false;
@@ -37,12 +49,12 @@ function toutArreter(signal = 'SIGTERM') {
     }
 }
 
-for (const { nom, commande, args } of processus) {
+for (const { nom, commande, args, env } of processus) {
     const enfant = spawn(commande, args, {
         cwd: RACINE,
         stdio: 'inherit',
         shell: surWindows,
-        env: process.env,
+        env: { ...process.env, ...env },
     });
 
     enfant.on('error', (erreur) => {

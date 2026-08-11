@@ -5,6 +5,7 @@
  * se modifie depuis l’interface d’administration (/admin).
  */
 import markdownIt from 'markdown-it';
+import { protectionAdmin, relaisPont } from './scripts/middleware-admin.mjs';
 
 // Les feuilles de styles, polices et images du template Les Scouts vivent à la
 // racine du dépôt, à côté du site. On les recopie sous /template/ en gardant la
@@ -39,6 +40,13 @@ function debutDuJour() {
 }
 
 export default function (eleventyConfig) {
+    // Tout passe par un seul port : le site, l’administration et son API.
+    // La protection par mot de passe s’active dès que `ADMIN_MOT_DE_PASSE`
+    // est défini — elle doit précéder le relais, sinon l’API resterait ouverte.
+    eleventyConfig.setServerOptions({
+        middleware: [protectionAdmin(), relaisPont()],
+    });
+
     for (const [source, destination] of Object.entries(ASSETS_TEMPLATE)) {
         eleventyConfig.addPassthroughCopy({ [source]: destination });
     }

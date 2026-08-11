@@ -18,6 +18,7 @@ maintenir. Rien à mettre à jour tous les mois, et presque rien à pirater.
 - [Ajouter ou retirer un administrateur](#ajouter-ou-retirer-un-administrateur)
 - [Faire fonctionner le formulaire de contact](#faire-fonctionner-le-formulaire-de-contact)
 - [Travailler sur le site depuis son ordinateur](#travailler-sur-le-site-depuis-son-ordinateur)
+- [Mettre un mot de passe sur l’administration](#mettre-un-mot-de-passe-sur-ladministration)
 - [Héberger l’administration sur un serveur](#héberger-ladministration-sur-un-serveur)
 - [Passer le relais au prochain webmaster](#passer-le-relais-au-prochain-webmaster)
 - [Comment c’est rangé](#comment-cest-rangé)
@@ -261,10 +262,12 @@ docker compose up
 - le site : <http://localhost:8080/>
 - l’administration : <http://localhost:8080/admin/>
 
-Les fichiers du dépôt sont montés dans les conteneurs : ce que tu modifies depuis
+Un seul port, pour le site comme pour l’administration.
+
+Les fichiers du dépôt sont montés dans le conteneur : ce que tu modifies depuis
 `/admin` est écrit directement sur ta machine, et le site se reconstruit tout
 seul. Les fichiers créés t’appartiennent — pas à `root` — grâce au `user:` défini
-dans `compose.yaml`.
+dans `docker-compose.yaml`.
 
 `docker compose down` arrête tout.
 
@@ -288,10 +291,11 @@ externe** :
 npm run dev
 ```
 
-Cette commande lance les deux processus nécessaires : le site (port 8080) et le
-pont qui permet à l’administration d’écrire dans les fichiers (port 8081). Si
-l’un des deux s’arrête, l’autre est arrêté aussi — mieux vaut un échec visible
-qu’une administration à moitié fonctionnelle.
+Cette commande lance les deux processus nécessaires : le site et le pont qui
+permet à l’administration d’écrire dans les fichiers. **Tout est servi sur le
+port 8080**, y compris l’API de l’administration : le pont n’écoute que sur la
+machine locale. Si l’un des deux processus s’arrête, l’autre est arrêté aussi —
+mieux vaut un échec visible qu’une administration à moitié fonctionnelle.
 
 Ouvre ensuite <http://localhost:8080/admin/> et clique « Se connecter ».
 L’interface modifie **directement les fichiers du dossier** : tu vois le résultat
@@ -311,66 +315,63 @@ Internet. Pour un site public, utilise plutôt une des méthodes de la section
 [Permettre la connexion à `/admin`](#4-permettre-la-connexion-à-admin), qui
 demandent une identification.
 
-Cela dit, si tu veux ouvrir l’administration depuis une autre machine du réseau,
-trois conditions doivent être réunies **en même temps**. Il n’y en a pas une qui
-suffise.
+### Mettre un mot de passe sur l’administration
 
-Dans les exemples ci-dessous, remplace `adresse-du-serveur` par l’adresse ou le
-nom de la machine qui héberge le site, et adapte les ports si tu ne gardes pas
-ceux du projet (8080 pour le site, 8081 pour le pont).
+```bash
+ADMIN_MOT_DE_PASSE='choisis-un-mot-de-passe' docker compose up
+```
 
-**1. Le site doit être servi en HTTPS.** C’est la condition la plus surprenante :
-elle ne vient pas de l’outil mais du navigateur. Les navigateurs réservent
-certaines fonctions de sécurité — dont `crypto.randomUUID`, dont l’administration
-a besoin — aux « contextes sécurisés » : HTTPS, `localhost` ou `127.0.0.1`. En
-HTTP sur une adresse IP, l’administration s’arrête sur **« Error loading the CMS
-configuration »**, quels que soient tes autres réglages.
+C’est tout. Le site reste public ; `/admin` **et son API d’écriture** demandent
+alors un identifiant (`admin` par défaut, modifiable avec `ADMIN_UTILISATEUR`).
 
-Le plus simple est un reverse proxy qui gère le certificat, par exemple
+Le mot de passe se donne au lancement, ou dans un fichier `.env` à côté de
+`docker-compose.yaml` — ce fichier n’est pas versionné.
+
+> **Pourquoi pas dans `config.yml` ?** Parce que ce fichier est servi
+> publiquement, comme le reste du site : essaie
+> `curl https://ton-site/admin/config.yml`. Un mot de passe écrit dedans serait
+> lisible par tout le monde, et se retrouverait en plus dans l’historique du
+> dépôt. Plus généralement, aucune protection écrite dans le site lui-même n’en
+> est une : le code s’exécute dans le navigateur du visiteur, qui peut le
+> contourner. C’est le serveur qui doit refuser la requête, et c’est ce que fait
+> le réglage ci-dessus.
+
+Et surtout : la protection couvre **aussi** `/api/v1`. Protéger seulement la page
+ne servirait à rien, puisque c’est cette adresse qui écrit dans les fichiers et
+qu’elle est appelable directement.
+
+### Héberger l’administration sur un serveur
+
+Une condition reste, et elle ne vient pas du projet mais du navigateur.
+
+**Le site doit être servi en HTTPS.** Les navigateurs réservent certaines
+fonctions de sécurité — dont `crypto.randomUUID`, dont l’administration a besoin
+— aux « contextes sécurisés » : HTTPS, `localhost` ou `127.0.0.1`. En HTTP sur une
+adresse IP, l’administration s’arrête sur **« Error loading the CMS
+configuration »**, quels que soient tes autres réglages. Le site public, lui,
+fonctionne très bien en HTTP : seule l’administration est concernée.
+
+Le plus simple est un reverse proxy qui s’occupe du certificat, par exemple
 [Caddy](https://caddyserver.com/), qui en génère un tout seul.
 
-**2. L’hôte doit être déclaré dans `config.yml`.** Sans cela, l’administration
-ignore le mode local et propose la connexion GitHub :
+C’est aussi ce qui rend le mot de passe sérieux : en HTTP, il circule en clair
+sur le réseau.
 
-```yaml
-local_backend:
-  allowed_hosts: ['adresse-du-serveur']
-```
+Il n’y a **rien d’autre à configurer** : l’administration déduit l’adresse de son
+API de celle de la page, donc aucun nom de machine ni port à écrire nulle part.
+Elle fonctionne telle quelle sur un ordinateur, sur un serveur du réseau, ou
+derrière un nom de domaine.
 
-`allowed_hosts` suffit si le pont écoute sur le port 8081 : l’administration
-compose alors l’adresse toute seule. Ajoute `url` uniquement si tu as changé ce
-port :
-
-```yaml
-local_backend:
-  allowed_hosts: ['adresse-du-serveur']
-  url: https://adresse-du-serveur:8081/api/v1
-```
-
-**3. Le pont doit accepter l’adresse du site.** Il ne répond par défaut qu’aux
-requêtes venant de `localhost` et `127.0.0.1`. Indique-lui l’adresse **exacte**
-du site, protocole et port compris, via la variable `ORIGIN` — au lancement, sans
-modifier de fichier :
+**Sans HTTPS, une alternative : le tunnel SSH.** Si tu veux simplement éditer,
+depuis ton ordinateur, un site qui tourne sur un serveur :
 
 ```bash
-ORIGIN='https://adresse-du-serveur:8080' docker compose up
+ssh -L 8080:localhost:8080 utilisateur@adresse-du-serveur
 ```
 
-Sans cela le pont répond, mais sans l’en-tête `Access-Control-Allow-Origin` : le
-navigateur jette la réponse en silence et l’administration retombe sur la
-connexion GitHub, sans message d’erreur explicite.
-
-**Une alternative bien plus simple**, si tu veux juste éditer depuis ton
-ordinateur un site qui tourne sur un serveur : un tunnel SSH. Le navigateur voit
-alors `localhost`, donc les trois conditions ci-dessus tombent d’elles-mêmes et
-il n’y a **rien à configurer** :
-
-```bash
-ssh -L 8080:localhost:8080 -L 8081:localhost:8081 utilisateur@adresse-du-serveur
-```
-
-Puis ouvre <http://localhost:8080/admin/>. En prime, l’administration n’est
-accessible qu’à travers ta connexion SSH.
+Puis ouvre <http://localhost:8080/admin/>. Le navigateur voit `localhost`, donc la
+condition HTTPS tombe, et l’administration n’est joignable qu’à travers ta
+connexion SSH — ce qui vaut mieux que n’importe quel mot de passe.
 
 ## Passer le relais au prochain webmaster
 
@@ -415,7 +416,8 @@ Le site occupe la racine du dépôt. Les fichiers du template Les Scouts
 │
 ├── eleventy.config.mjs      Réglages techniques (rarement à toucher)
 ├── netlify.toml             Réglages d’hébergement
-├── scripts/                 dev.mjs (npm run dev), admin.mjs, reset.mjs
+├── scripts/                 dev.mjs (npm run dev), reset.mjs,
+│                           middleware-admin.mjs (port unique + mot de passe)
 ├── Dockerfile docker-compose.yaml  Pour travailler sans installer Node
 │
 ├── css/ scss/ fonts/ images/   LE TEMPLATE Les Scouts (charte graphique)

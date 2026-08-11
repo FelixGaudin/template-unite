@@ -23,6 +23,14 @@
 
         Voir la section « Choisir son interface d’administration » du README.
     -->
+    <!--
+        On repousse le démarrage automatique : quelques réglages ne peuvent être
+        connus qu’au chargement de la page (voir plus bas).
+    -->
+    <script>
+        window.CMS_MANUAL_INIT = true;
+    </script>
+
     <script src="https://unpkg.com/decap-cms@3.15.1/dist/decap-cms.js"></script>
 
     <!--
@@ -30,5 +38,28 @@
         CMS, dont ce fichier utilise `CMS`, `createClass` et `h`.
     -->
     <script src="apercu.js"></script>
+
+    <script>
+        /*
+            L’adresse du pont d’écriture est déduite de celle de la page.
+
+            Écrite en dur dans config.yml, elle devrait mentionner un nom de
+            machine et un port : la configuration ne fonctionnerait plus que sur
+            un seul poste. Ici, l’administration cherche son API sur sa propre
+            adresse, quel que soit l’endroit d’où le site est servi — un
+            ordinateur, un serveur du réseau, un port différent.
+
+            Ces valeurs viennent compléter config.yml, qui reste la référence
+            pour tout le reste.
+        */
+        CMS.init({
+            config: {
+                local_backend: {
+                    url: window.location.origin + '/api/v1',
+                    allowed_hosts: [window.location.hostname],
+                },
+            },
+        });
+    </script>
 </body>
 </html>
