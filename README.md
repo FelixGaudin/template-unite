@@ -18,6 +18,7 @@ maintenir. Rien à mettre à jour tous les mois, et presque rien à pirater.
 - [Ajouter ou retirer un administrateur](#ajouter-ou-retirer-un-administrateur)
 - [Faire fonctionner le formulaire de contact](#faire-fonctionner-le-formulaire-de-contact)
 - [Travailler sur le site depuis son ordinateur](#travailler-sur-le-site-depuis-son-ordinateur)
+- [Héberger l’administration sur un serveur](#héberger-ladministration-sur-un-serveur)
 - [Passer le relais au prochain webmaster](#passer-le-relais-au-prochain-webmaster)
 - [Comment c’est rangé](#comment-cest-rangé)
 - [Repartir de zéro](#repartir-de-zéro)
@@ -280,20 +281,96 @@ Pages ou Netlify, qui sont gratuits, Docker n’a pas d’intérêt.
 
 ### Essayer l’administration sans rien mettre en ligne
 
-Tu peux tester `/admin` sur ton ordinateur, **sans compte GitHub ni service
-externe**. Dans un second terminal :
+Tu peux utiliser `/admin` sur ton ordinateur, **sans compte GitHub ni service
+externe** :
 
 ```bash
-npm run admin   # démarre le pont local sur le port 8081
+npm run dev
 ```
 
-Puis ouvre <http://localhost:8080/admin/> et clique « Se connecter ». L’interface
-modifie alors **directement les fichiers du dossier** : tu vois le résultat en
-direct sur le site, et tu peux annuler avec `git checkout` si tu as fait des
-essais.
+Cette commande lance les deux processus nécessaires : le site (port 8080) et le
+pont qui permet à l’administration d’écrire dans les fichiers (port 8081). Si
+l’un des deux s’arrête, l’autre est arrêté aussi — mieux vaut un échec visible
+qu’une administration à moitié fonctionnelle.
 
-C’est le réglage `local_backend: true` de `config.yml` qui autorise ce mode. Il
-n’a aucun effet sur le site publié : il n’est pris en compte que sur `localhost`.
+Ouvre ensuite <http://localhost:8080/admin/> et clique « Se connecter ».
+L’interface modifie **directement les fichiers du dossier** : tu vois le résultat
+en direct sur le site, et tu peux annuler avec `git checkout` après des essais.
+
+`npm start` (le site seul) et `npm run admin` (le pont seul) restent disponibles
+si tu veux les lancer séparément.
+
+C’est le réglage `local_backend: true` de `config.yml` qui autorise ce mode.
+
+### Héberger l’administration sur un serveur
+
+⚠ **Cette configuration n’a aucun mot de passe.** N’importe qui capable
+d’atteindre `/admin` peut modifier le site et déposer des fichiers sur le
+serveur. À réserver à un réseau local de confiance, et **jamais** à exposer sur
+Internet. Pour un site public, utilise plutôt une des méthodes de la section
+[Permettre la connexion à `/admin`](#4-permettre-la-connexion-à-admin), qui
+demandent une identification.
+
+Cela dit, si tu veux ouvrir l’administration depuis une autre machine du réseau,
+trois conditions doivent être réunies **en même temps**. Il n’y en a pas une qui
+suffise.
+
+Dans les exemples ci-dessous, remplace `adresse-du-serveur` par l’adresse ou le
+nom de la machine qui héberge le site, et adapte les ports si tu ne gardes pas
+ceux du projet (8080 pour le site, 8081 pour le pont).
+
+**1. Le site doit être servi en HTTPS.** C’est la condition la plus surprenante :
+elle ne vient pas de l’outil mais du navigateur. Les navigateurs réservent
+certaines fonctions de sécurité — dont `crypto.randomUUID`, dont l’administration
+a besoin — aux « contextes sécurisés » : HTTPS, `localhost` ou `127.0.0.1`. En
+HTTP sur une adresse IP, l’administration s’arrête sur **« Error loading the CMS
+configuration »**, quels que soient tes autres réglages.
+
+Le plus simple est un reverse proxy qui gère le certificat, par exemple
+[Caddy](https://caddyserver.com/), qui en génère un tout seul.
+
+**2. L’hôte doit être déclaré dans `config.yml`.** Sans cela, l’administration
+ignore le mode local et propose la connexion GitHub :
+
+```yaml
+local_backend:
+  allowed_hosts: ['adresse-du-serveur']
+```
+
+`allowed_hosts` suffit si le pont écoute sur le port 8081 : l’administration
+compose alors l’adresse toute seule. Ajoute `url` uniquement si tu as changé ce
+port :
+
+```yaml
+local_backend:
+  allowed_hosts: ['adresse-du-serveur']
+  url: https://adresse-du-serveur:8081/api/v1
+```
+
+**3. Le pont doit accepter l’adresse du site.** Il ne répond par défaut qu’aux
+requêtes venant de `localhost` et `127.0.0.1`. Indique-lui l’adresse **exacte**
+du site, protocole et port compris, via la variable `ORIGIN` — au lancement, sans
+modifier de fichier :
+
+```bash
+ORIGIN='https://adresse-du-serveur:8080' docker compose up
+```
+
+Sans cela le pont répond, mais sans l’en-tête `Access-Control-Allow-Origin` : le
+navigateur jette la réponse en silence et l’administration retombe sur la
+connexion GitHub, sans message d’erreur explicite.
+
+**Une alternative bien plus simple**, si tu veux juste éditer depuis ton
+ordinateur un site qui tourne sur un serveur : un tunnel SSH. Le navigateur voit
+alors `localhost`, donc les trois conditions ci-dessus tombent d’elles-mêmes et
+il n’y a **rien à configurer** :
+
+```bash
+ssh -L 8080:localhost:8080 -L 8081:localhost:8081 utilisateur@adresse-du-serveur
+```
+
+Puis ouvre <http://localhost:8080/admin/>. En prime, l’administration n’est
+accessible qu’à travers ta connexion SSH.
 
 ## Passer le relais au prochain webmaster
 
@@ -338,7 +415,8 @@ Le site occupe la racine du dépôt. Les fichiers du template Les Scouts
 │
 ├── eleventy.config.mjs      Réglages techniques (rarement à toucher)
 ├── netlify.toml             Réglages d’hébergement
-├── scripts/admin.mjs        Lance le pont local de `npm run admin`
+├── scripts/                 dev.mjs (npm run dev), admin.mjs, reset.mjs
+├── Dockerfile docker-compose.yaml  Pour travailler sans installer Node
 │
 ├── css/ scss/ fonts/ images/   LE TEMPLATE Les Scouts (charte graphique)
 ├── documentation/ exemples/    Documentation et exemples du template

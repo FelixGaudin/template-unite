@@ -5,41 +5,50 @@
 #   · le site           http://localhost:8080/
 #   · l’administration  http://localhost:8080/admin/
 #
-# Les fichiers du dépôt sont montés dans les conteneurs : les modifications
-# faites depuis /admin sont écrites directement sur ta machine, et le site se
+# Les fichiers du dépôt sont montés dans le conteneur : les modifications faites
+# depuis /admin sont écrites directement sur ta machine, et le site se
 # reconstruit tout seul.
+#
+# Un seul service, qui lance les deux processus dont l’administration a besoin
+# (le site sur 8080, le pont d’écriture sur 8081). Ils sont indissociables :
+# séparer les deux n’apportait rien et compliquait le démarrage.
 
 services:
-  # Construit le site et le sert, en surveillant les modifications.
   site:
     build:
       context: .
       target: developpement
-    command: npm start
+    command: npm run dev
     ports:
-      - '8080:8080'
+      - '8080:8080' # le site et /admin
+      - '8081:8081' # le pont utilisé par /admin pour écrire
     volumes:
       - .:/site
-      # Les dépendances installées dans l’image ne doivent pas être masquées
-      # par le node_modules de la machine hôte, qui peut être absent ou
-      # contenir des binaires compilés pour un autre système.
+      # Les dépendances installées dans l’image ne doivent pas être masquées par
+      # le node_modules de la machine hôte, qui peut être absent ou contenir des
+      # binaires compilés pour un autre système.
       - deps:/site/node_modules
-    # Les fichiers écrits dans le volume appartiennent à cet utilisateur.
-    # Sans cela, ils appartiendraient à root sur ta machine.
+    # Les fichiers écrits dans le volume appartiennent à cet utilisateur. Sans
+    # cela, ils appartiendraient à root sur ta machine.
     user: '${UID:-1000}:${GID:-1000}'
+    # Fournit un vrai processus d’init : les deux processus lancés par
+    # `npm run dev` sont alors correctement arrêtés et nettoyés.
+    init: true
+    environment:
+      # Le pont n’accepte par défaut que les requêtes venant de `localhost` et de
+      # `127.0.0.1`. Pour ouvrir l’administration depuis une autre machine, il
+      # faut lui indiquer l’adresse exacte du site — sinon le navigateur bloque
+      # sa réponse et l’administration retombe sur la connexion GitHub.
+      #
+      # Attention : ce mode n’a aucun mot de passe. Lis la section « Héberger
+      # l’administration sur un serveur » du README avant de t’en servir.
+      #
+      # Se renseigne au lancement, sans modifier ce fichier :
+      #   ORIGIN='https://adresse-du-serveur:8080' docker compose up
+      ORIGIN: '${ORIGIN:-}'
 
-  # Le pont qui permet à /admin d’écrire dans les fichiers du dépôt.
-  admin:
-    build:
-      context: .
-      target: developpement
-    command: npm run admin
-    ports:
-      - '8081:8081'
-    volumes:
-      - .:/site
-      - deps:/site/node_modules
-    user: '${UID:-1000}:${GID:-1000}'
+  # Pour ne servir que le site public, sans le pont d’écriture :
+  #   docker compose run --rm --service-ports site npm start
 
 volumes:
   deps:

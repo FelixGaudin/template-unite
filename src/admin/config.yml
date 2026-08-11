@@ -15,8 +15,28 @@ locale: fr
 
 # Permet d’essayer l’administration depuis son ordinateur, sans compte GitHub :
 # elle écrit alors directement dans les fichiers du dossier (voir `npm run admin`
-# dans le README). Ce réglage n’a aucun effet sur le site publié — il n’est pris
-# en compte que sur localhost.
+# dans le README).
+#
+# Sous cette forme, l’administration ne fonctionne qu’en ouvrant le site sur
+# `localhost` ou `127.0.0.1`. Deux raisons, l’une comme l’autre bloquantes :
+#
+#   · l’outil n’active ce mode que pour ces deux noms d’hôte ;
+#   · les navigateurs réservent certaines fonctions de sécurité (dont
+#     `crypto.randomUUID`, dont l’outil a besoin) aux « contextes sécurisés » :
+#     HTTPS, `localhost` ou `127.0.0.1`. En HTTP sur une adresse IP,
+#     l’administration s’arrête sur « Error loading the CMS configuration ».
+#
+# Pour y accéder depuis une autre machine, il faut donc du HTTPS *et* déclarer
+# l’hôte ici, en remplaçant adresse-du-serveur par l’adresse ou le nom de la
+# machine qui héberge le site :
+#
+#   local_backend:
+#     allowed_hosts: ['adresse-du-serveur']
+#     # `url` n’est utile que si le pont n’écoute pas sur le port 8081 :
+#     url: https://adresse-du-serveur:8081/api/v1
+#
+# Voir la section « Héberger l’administration sur un serveur » du README, qui
+# explique aussi pourquoi ce n’est pas conseillé en l’état.
 local_backend: true
 
 backend:
