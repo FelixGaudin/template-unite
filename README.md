@@ -1,206 +1,383 @@
-# Thème pour les sites d’unité Les Scouts
+# Site d’unité avec interface d’administration
 
-[Les Scouts asbl](https://lesscouts.be/) propose ce thème à l’usage de ses membres pour créer le site de leur unité scoute.
+Ce dépôt contient un site d’unité **prêt à l’emploi**, avec deux parties :
 
-Dans ce dépôt, tu trouveras :
+- le **site public**, qui reprend la charte graphique Les Scouts et s’affiche
+  correctement sur téléphone comme sur ordinateur ;
+- une **interface d’administration** à l’adresse `/admin`, où l’on modifie les
+  textes, l’agenda et les photos en remplissant des formulaires, sans écrire
+  une ligne de code.
 
-- des feuilles de styles CSS reposant sur [Bootstrap](https://getbootstrap.com/) qui intègrent la charte graphique des Scouts
-- les polices recommandées
-- nos logos et images d’illustration
+Le site est **statique** : il n’y a pas de base de données ni de serveur à
+maintenir. Rien à mettre à jour tous les mois, et presque rien à pirater.
 
-## Ton avis nous intéresse !
+## Sommaire
 
-Tu as pu découvrir et peut-être déjà essayer le template pour ton site d’unité. 
-Cette première mouture s’adresse aux plus bricoleurs, c’est-à-dire la plupart des personnes qui s’occupent déjà 
-du site web d’unité. L’outil répond-il au besoin ? Faut-il aller plus loin ? Dis-le nous ci-dessous.
+- [Ce que l’administrateur peut modifier](#ce-que-ladministrateur-peut-modifier)
+- [Mise en ligne, étape par étape](#mise-en-ligne-étape-par-étape)
+- [Ajouter ou retirer un administrateur](#ajouter-ou-retirer-un-administrateur)
+- [Faire fonctionner le formulaire de contact](#faire-fonctionner-le-formulaire-de-contact)
+- [Travailler sur le site depuis son ordinateur](#travailler-sur-le-site-depuis-son-ordinateur)
+- [Passer le relais au prochain webmaster](#passer-le-relais-au-prochain-webmaster)
+- [Comment c’est rangé](#comment-cest-rangé)
+- [Repartir de zéro](#repartir-de-zéro)
 
-➡ [Répondre au sondage](https://forms.office.com/r/tQjKg3Tep2) ⬅
+## Ce que l’administrateur peut modifier
 
-## Documentation
+Depuis `/admin`, sans connaissances techniques :
 
-Pour savoir comment télécharger le template, l’ajouter à ton site et contribuer, continue la lecture ci-dessous.
+| Rubrique             | Ce qu’on y fait                                                                    |
+|----------------------|------------------------------------------------------------------------------------|
+| **Actualités**       | Écrire une nouvelle, avec une photo. Les 3 dernières vont sur la page d’accueil.    |
+| **Agenda**           | Annoncer une activité (date, heure, lieu, section).                                |
+| **Galeries photos**  | Créer un album et y déposer des photos en les faisant glisser.                     |
+| **Réglages du site** | Logo, nom de l’unité, présentation, coordonnées, sections, pied de page, couleurs. |
 
-Si tu veux voir les possibilités offertes par le template et les exemples, 
-[consulte la documentation](https://template.lesscouts.be/).
+Trois choses se font toutes seules, sans intervention :
 
-## Qu’y a-t-il là-dedans ?
+- chaque écran d’édition affiche à droite un **aperçu du site**, mis à jour au fur
+  et à mesure de la frappe : on voit le résultat avant d’enregistrer ;
+- une activité dont la date est passée **bascule automatiquement** dans
+  « activités passées » ;
+- le site est **reconstruit et publié** dans la minute qui suit chaque
+  modification.
 
-Les dossiers sont organisés comme suit :
+### Le logo de l’unité
 
-| Dossier         | Description                                                                         |
-|-----------------|-------------------------------------------------------------------------------------|
-| `css`           | Feuilles de styles CSS compilées à partir des feuilles de styles du dossier `scss`. |
-| `documentation` | Code source de la [documentation du template](https://template.lesscouts.be/))      |
-| `exemples`      | Quelques exemples de mise en œuvre du template                                      |
-| `fonts`         | Fichiers des polices utilisées par le template                                      |
-| `images`        | Logos et images d’illustration                                                      |
-| `scss`          | Feuilles de styles CSS originales au format LESS                                    |
+Dans *Réglages du site*, le champ **Logo de l’unité** remplace le logo affiché en
+haut à gauche de chaque page. Laissé vide, c’est celui de la fédération qui
+s’affiche.
 
-Dans le dossier `css/`, le fichier `base.css` est un fichier compilé qui contient :
+Le logo est encadré automatiquement en hauteur, donc il ne déforme pas la barre
+de navigation et reste lisible sur téléphone, quelles que soient les dimensions
+du fichier envoyé. Un PNG à fond transparent, plus large que haut, donne le
+meilleur résultat.
 
-- le code CSS de Bootstrap v1.5.3.
-- le code CSS du template Les Scouts
+Le logo de la fédération reste présent en pied de page : l’unité en est membre.
 
-### Pas de Javascript dans le template ?
+## Mise en ligne, étape par étape
 
-Nous n’avons pas inclus le code Javascript de Bootstrap car le template Les Scouts n’ajoute aucune 
-fonctionnalité Javascript. Nous te conseillons donc de charger le code JS de Bootstrap directement depuis un CDN
-(voir les exemples ou la section _Comment démarrer_ ci-dessous).
+À faire **une seule fois**, par quelqu’un d’un peu à l’aise avec l’informatique.
+Compte une petite heure la première fois.
 
-## Comment démarrer
+### 1. Mettre le site sur GitHub
 
-### Télécharger le template
+1. Crée un compte gratuit sur [github.com](https://github.com/) si tu n’en as pas.
+2. Crée une **copie du dépôt du template** dans ton compte (bouton « Fork » sur
+   [github.com/lesscouts/template-unite](https://github.com/lesscouts/template-unite)),
+   ou crée un nouveau dépôt et copies-y les fichiers.
+3. Note le nom complet de ton dépôt, sous la forme `mon-compte/mon-depot`.
 
-Plusieurs options de téléchargement sont possibles :
+### 2. Indiquer ton dépôt à l’administration
 
-- [télécharge le fichier zip](https://github.com/lesscouts/template-unite/releases/) de la version la plus récente du template
-- installe le template dans ton projet avec [composer](https://getcomposer.org/) : `composer require lesscouts/template-unite`
-- installe le template dans ton projet avec [npm](https://www.npmjs.com/) : `npm add @lesscouts/template-unite`
-- installe le template dans ton projet avec [yarn](https://yarnpkg.com/) : `yarn add @lesscouts/template-unite`
-- clone le dépôt git : `git clone https://github.com/lesscouts/template-unite.git`
+Ouvre le fichier `src/admin/config.yml` et remplace la ligne :
 
-👉 La méthode la plus simple est de télécharger le fichier zip.
+```yaml
+  repo: mon-unite/mon-site
+```
 
-### Installer le template pour Wordpress, Drupal, …
+par le nom de ton dépôt. **C’est la seule ligne à modifier** dans ce fichier.
 
-Nous n’avons pas encore prévu de thème clé sur porte pour les CMS grand public.
+### 3. Publier le site
 
-Si tu prépares un site avec une plateforme comme Wordpress, Drupal ou un autre CMS, n’hésite pas à partager ta méthode 
-d’intégration pour aider les autres unités (voir la section « Contribuer au projet » ci-dessous).
+Le site peut être hébergé gratuitement. Les deux services ci-dessous
+reconstruisent le site automatiquement à chaque modification.
 
-### Installer le template pour un site statique
+**Avec Cloudflare Pages** (recommandé)
 
-Si tu as téléchargé le fichier zip, décompresse-le dans un dossier dédié, par exemple `template/` à la racine de ton site.
+1. Crée un compte sur [pages.cloudflare.com](https://pages.cloudflare.com/).
+2. « Create a project » → connecte ton dépôt GitHub.
+3. Renseigne exactement :
+   - Framework preset : `None`
+   - Build command : `npm run build`
+   - Build output directory : `_site`
+4. « Save and Deploy ».
 
-👍 Ne mélange pas les fichiers de ton site et ceux du template. Ça t’évitera de perdre des cheveux plus tard si tu veux
-mettre à jour le template.
+   Laisse « Root directory » vide : le site est à la racine du dépôt.
 
-### Créer ta première page web
+**Avec Netlify**
 
-Pour démarrer, recopie un exemple de page (voir le dossier `exemples/` pour les sources 
-ou sur https://template.lesscouts.be/) et mets-le à ta sauce ou pars d’une page blanche en recopiant ce squelette HTML :
+1. Crée un compte sur [netlify.com](https://www.netlify.com/).
+2. « Add new site » → « Import an existing project » → ton dépôt GitHub.
+3. « Deploy ».
+
+Il n’y a rien à saisir : la commande de construction et le dossier à publier sont
+déjà décrits dans le fichier `netlify.toml`, à la racine du dépôt.
+
+### 4. Permettre la connexion à `/admin`
+
+L’administration doit vérifier que la personne qui se connecte a le droit de
+modifier le site. Trois méthodes, de la plus confortable pour des animateurs à la
+plus rapide à mettre en place.
+
+> ⚠ Beaucoup de tutoriels encore en ligne conseillent **Netlify Identity** ou
+> **Git Gateway de Netlify**. Les deux sont désormais dépréciés : ils
+> fonctionnent pour les sites déjà configurés, mais ne sont plus recommandés pour
+> un nouveau site et leurs bugs ne sont plus corrigés. Ne partons pas là-dessus.
+
+**Méthode A — adresse email et mot de passe (recommandé pour une unité)**
+
+C’est la méthode qui demande le moins aux animateurs : **aucun compte GitHub à
+créer**. Ils reçoivent une invitation par email et choisissent leur mot de passe.
+
+Elle repose sur [DecapBridge](https://decapbridge.com/), un service gratuit
+jusqu’à 3 sites et 10 collaborateurs par site — largement de quoi couvrir une
+unité.
+
+1. Crée un compte sur [decapbridge.com](https://decapbridge.com/) et déclare ton
+   site en le reliant à ton dépôt GitHub.
+2. DecapBridge te donne un bloc `backend` à recopier dans `config.yml`. Il a
+   cette forme, avec l’identifiant de ton site :
+
+   ```yaml
+   backend:
+     name: git-gateway
+     repo: mon-compte/mon-depot
+     branch: main
+     identity_url: https://auth.decapbridge.com/sites/identifiant-de-mon-site
+     gateway_url: https://gateway.decapbridge.com
+   ```
+
+   Utilise le bloc généré par DecapBridge plutôt que celui-ci : c’est lui qui
+   contient le bon identifiant.
+3. Invite les animateurs par email depuis DecapBridge.
+
+Ce que ça implique : un service externe de plus dans la chaîne. Le risque reste
+faible, parce que **les contenus ne sont pas chez eux** — ils restent dans ton
+dépôt, en fichiers texte. Si le service ferme, on repasse aux méthodes B ou C en
+changeant ces quelques lignes, sans rien perdre.
+
+À noter : cette méthode fonctionne avec Decap CMS uniquement. Sveltia CMS ne
+prend pas en charge `git-gateway`.
+
+**Méthode B — bouton « Se connecter avec GitHub »**
+
+Chaque animateur a un compte GitHub et clique sur un bouton. Il faut déployer un
+petit intermédiaire d’authentification gratuit sur Cloudflare Workers
+(une dizaine de minutes) :
+[decap-proxy](https://github.com/sterlingwes/decap-proxy) pour Decap CMS, ou
+[sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth) si tu es passé à
+Sveltia. Ajoute ensuite son adresse dans `config.yml` :
+
+```yaml
+backend:
+  name: github
+  repo: mon-compte/mon-depot
+  branch: main
+  base_url: https://adresse-de-mon-intermediaire.workers.dev
+```
+
+**Méthode C — un jeton personnel (pour tester rapidement)**
+
+1. Sur GitHub : *Settings → Developer settings → Personal access tokens →
+   Fine-grained tokens → Generate new token*.
+2. Donne-lui accès **uniquement au dépôt du site**, permission
+   *Contents : Read and write*.
+3. Sur `/admin`, choisis la connexion par jeton et colle-le.
+
+Immédiat, mais chaque personne doit générer et conserver son jeton. Bien pour un
+essai, peu pratique dans le temps.
+
+## Choisir son interface d’administration
+
+Le site est livré avec **Decap CMS**, dont l’interface est **en français**. C’est
+le choix par défaut, parce que la demande était de permettre à un animateur de
+modifier le site sans connaissances techniques.
+
+Il existe une alternative, **Sveltia CMS** : plus moderne, nettement plus
+agréable pour déposer des photos et bien meilleure sur téléphone, mais son
+interface n’est **disponible qu’en anglais** (18 langues sont proposées, pas le
+français). Les libellés des champs que tu vois dans les formulaires — « Titre »,
+« Date de fin », « Section concernée »… — restent en français dans les deux cas,
+car ils viennent de `config.yml` : seuls les boutons et menus de l’outil
+changent de langue.
+
+Les deux lisent **exactement le même `config.yml`**. Pour passer de l’un à
+l’autre, il suffit de remplacer une ligne dans `src/admin/index.html` :
 
 ```html
-<!DOCTYPE html>
-<html lang="fr-BE">
-<head>
-    <meta charset="UTF-8">
-    <title>Squelette minimaliste d’une page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- Ci-dessous, le lien vers la feuille CSS de base du template Les Scouts -->
-    <link href="template/css/base.css" rel="stylesheet">
-    
-    <!-- Si tu veux utiliser les icônes de Bootstrap, laisse la ligne ci-dessous. Elles sont utilisées dans les exemples -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    
-    <!-- Ajoute ensuite ci-dessous la feuille de styles CSS que tu vas utiliser pour personnaliser le template pour ton site -->
-    
-</head>
-<body>
-    <!-- Ici, c’est à toi de jouer. Fais preuve de créativité ou inspire-toi des exemples fournis avec le template -->
-    
-    
-    
-    <!-- 
-    Et tout en bas du corps de la page, ajoute le code Javascript de Bootstrap 
-    pour bénéficier des composants animés (menus déroulants, accordéons, …) 
-    -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-</body>
-</html>
+<!-- interface en français -->
+<script src="https://unpkg.com/decap-cms@3.15.1/dist/decap-cms.js"></script>
+
+<!-- ou interface en anglais, plus moderne et plus adaptée au téléphone -->
+<script src="https://unpkg.com/@sveltia/cms@0.185.0/dist/sveltia-cms.js"></script>
 ```
 
-👉 Si tu souhaites créer tes propres classes CSS, crée ton propre fichier CSS 
-et ajoute-le après la déclaration du template Les Scouts. Ceci étendra les paramétrages du template Les Scouts sans toucher
-au code. C’est une bonne pratique pour faciliter le suivi des mises à jour du template.
+Si l’unité poste souvent des photos depuis un téléphone, Sveltia vaut l’essai
+malgré l’anglais. Sveltia accepte les traductions proposées par sa communauté :
+contribuer la version française serait utile à toutes les unités.
 
-### Aller plus loin
+## Ajouter ou retirer un administrateur
 
-Si tu as l’esprit joueur ou les compétences pour le faire, tu peux aussi étendre le fichier SCSS du template et le compiler
-toi-même dans un unique fichier CSS. 
+Chaque administrateur a besoin d’un compte GitHub gratuit, puis d’être ajouté au
+dépôt : *Settings → Collaborators → Add people*, avec le rôle **Write**.
 
-Regarde la section _Compiler le SCSS en CSS_ plus bas pour en savoir plus.
+Pour retirer quelqu’un (fin de mandat, départ de l’unité), retire-le de cette
+même liste. Il perd immédiatement l’accès à `/admin`.
 
-## Contribuer au projet
+> C’est le seul vrai inconvénient de cette solution : un compte GitHub à créer
+> une fois par personne. En échange, il n’y a aucun mot de passe à gérer dans le
+> site, aucune mise à jour de sécurité à suivre, et l’historique des
+> modifications est conservé — on peut revenir en arrière si quelqu’un se trompe.
 
-Le template est une source d’inspiration pour toutes les unités de la fédération. Toi aussi tu peux contribuer au projet :
+## Faire fonctionner le formulaire de contact
 
-- [signale les bugs](https://github.com/lesscouts/template-unite/issues/)
-- [propose tes améliorations, améliore la documentation, …](https://github.com/lesscouts/template-unite/pulls/)
-- si tu découvres une faille de sécurité, [préviens-nous](SECURITY.md)
+Un site statique ne peut pas envoyer d’email par lui-même. Tant que ce n’est pas
+configuré, la page Contact affiche l’adresse email de l’unité et un message
+d’explication — rien n’est cassé.
 
-## Compiler le SCSS en CSS
+Pour activer le formulaire :
 
-Cette section est destinée aux utilisateurs avancés qui ne se contentent pas du fichier CSS fourni avec le template.
+- **Sur Netlify** : le service *Netlify Forms* peut s’en charger. Ajoute
+  l’attribut `data-netlify="true"` au `<form>` dans `src/contact.njk`.
+- **Avec un service externe** (par exemple [Formspree](https://formspree.io/),
+  offre gratuite suffisante pour une unité) : crée un formulaire, récupère son
+  adresse d’envoi, puis colle-la dans `/admin` → *Réglages du site* → *Contact*
+  → « Adresse de traitement du formulaire ».
 
-Tu ne dois compiler le template que si tu contribues au code du template ou si tu veux rassembler Bootstrap, le template 
-Les Scouts et ton code CSS dans un même fichier CSS.
+## Travailler sur le site depuis son ordinateur
 
-Pour cela, tu auras besoin d’installer [Node.js](https://nodejs.org/en/download/) et 
-[npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
-
-**Installer les dépendances**
+Utile pour prévisualiser avant publication, ou pour modifier l’apparence.
 
 ```bash
-$ npm install
+npm install     # une seule fois
+npm start       # ouvre le site sur http://localhost:8080
 ```
 
-Cette commande installe Bootstrap ainsi que [SASS](https://sass-lang.com/), qui compile les feuilles de styles.
+Le site se recharge tout seul à chaque modification. `npm run build` produit la
+version finale dans `_site/`.
 
-**Compiler les fichiers en CSS**
+Il faut [Node.js](https://nodejs.org/) installé.
 
-Le fichier `package.json` contient deux scripts pour compiler tous les fichiers du dossier `scss` et produire 
-leur équivalent en CSS dans le dossier `css`. 
+### Avec Docker, sans installer Node
 
-Pour la production (source compressée) :
+Si tu préfères ne rien installer sur ta machine :
 
 ```bash
-$ npm run compile-prod
+docker compose up
 ```
 
-Pour le développement (source non compressée et source map pour le débogage) :
+- le site : <http://localhost:8080/>
+- l’administration : <http://localhost:8080/admin/>
+
+Les fichiers du dépôt sont montés dans les conteneurs : ce que tu modifies depuis
+`/admin` est écrit directement sur ta machine, et le site se reconstruit tout
+seul. Les fichiers créés t’appartiennent — pas à `root` — grâce au `user:` défini
+dans `compose.yaml`.
+
+`docker compose down` arrête tout.
+
+**Pour héberger le site soi-même**, l’image de production ne contient que le site
+construit, servi par nginx (environ 67 Mo, ni Node ni sources) :
 
 ```bash
-$ npm run compile-dev
+docker build -t site-unite .
+docker run -p 8080:80 site-unite
 ```
 
-### En savoir plus
+Ce n’est utile que pour un hébergement sur ton propre serveur. Pour Cloudflare
+Pages ou Netlify, qui sont gratuits, Docker n’a pas d’intérêt.
 
-Différents outils permettent de compiler les sources SCSS en CSS. 
-Tu trouveras plus d’infos sur les sites suivants (en anglais) : 
+### Essayer l’administration sans rien mettre en ligne
 
-- [Documentation du langage SASS](https://sass-lang.com/)
-- [Comment personnaliser Bootstrap](https://getbootstrap.com/docs/5.1/customize/overview/)
+Tu peux tester `/admin` sur ton ordinateur, **sans compte GitHub ni service
+externe**. Dans un second terminal :
 
-# Licences
+```bash
+npm run admin   # démarre le pont local sur le port 8081
+```
 
-Le **code CSS et la documentation du template** sont diffusés sous [licence MIT](LICENSE.md).
+Puis ouvre <http://localhost:8080/admin/> et clique « Se connecter ». L’interface
+modifie alors **directement les fichiers du dossier** : tu vois le résultat en
+direct sur le site, et tu peux annuler avec `git checkout` si tu as fait des
+essais.
 
-Les **photos d’illustration** présentes dans le template sont la propriété de la fédération Les Scouts asbl 
-et ne peuvent pas être utilisées, diffusées ou modifiées sans autorisation préalable 
-de la fédération Les Scouts asbl.
+C’est le réglage `local_backend: true` de `config.yml` qui autorise ce mode. Il
+n’a aucun effet sur le site publié : il n’est pris en compte que sur `localhost`.
 
-Les **logos Les Scouts, les logos des branches et les illustrations** sont la propriété de la fédération
-Les Scouts asbl et peuvent uniquement être utilisés par ses membres.
+## Passer le relais au prochain webmaster
 
-Les composants du template fournis par des tiers sont distribués selon leurs licences respectives présentées ci-dessous. 
+Dans une unité, la personne qui s’occupe du site change régulièrement. Pour que
+la transition se passe bien :
 
-## Bootstrap 
+1. ajoute le nouveau webmaster comme collaborateur du dépôt (rôle **Write**) ;
+2. transfère la propriété du dépôt GitHub, ou place-le dans une **organisation
+   GitHub au nom de l’unité** plutôt que sur un compte personnel — comme ça le
+   site ne dépend plus d’une seule personne ;
+3. transmets aussi les accès à l’hébergement (Cloudflare ou Netlify) ;
+4. retire les accès des personnes qui ne s’en occupent plus.
 
-[Bootstrap](https://getbootstrap.com/) et les [icônes Bootstrap](https://icons.getbootstrap.com/) sont publiés sous 
-[licence MIT](https://github.com/twbs/bootstrap/blob/main/LICENSE) 
-et la documentation de Bootstrap est publiée sous 
-[licence Creative Commons](https://creativecommons.org/licenses/by/3.0/).
+> 👉 Créer dès le départ une **organisation GitHub pour l’unité** évite le
+> scénario classique du site coincé sur le compte de quelqu’un qui a quitté
+> l’unité.
 
-## Polices
+## Comment c’est rangé
 
-- **[Caveat Brush](https://fonts.google.com/specimen/Caveat+Brush)**, par Impallari Type, 
-  sous [licence Open Font](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
-- **[Housepaint](https://fr.ffonts.net/HousePaint12.font)**, par NicholasJudy456, gratuite pour un usage non commercial 
-- **[Mali](https://fonts.google.com/specimen/Mali)**, par Cadson Demak, 
-  sous [licence Open Font](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
-- **[Muli](https://www.cufonfonts.com/font/muli)**, par Vernon Adams, 
-  sous [licence Open Font](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL).
-- **[RobotoMono](https://fonts.google.com/specimen/Roboto+Mono)**, par Christian Robertson, 
- sous [licence Apache v2.0](http://www.apache.org/licenses/LICENSE-2.0)
+Le site occupe la racine du dépôt. Les fichiers du template Les Scouts
+(`css/`, `scss/`, `fonts/`, `images/`) vivent à côté et sont recopiés sous
+`/template/` au moment de la construction.
+
+```
+├── src/                     LE SITE — c’est ici que tout se passe
+│   ├── _data/unite.json      Les réglages (modifiables via /admin)
+│   ├── _includes/            Gabarits : en-tête, pied de page, bandeau, cartes…
+│   ├── admin/                L’interface d’administration
+│   │   ├── apercu.js          Gabarits du volet d’aperçu, à droite de l’éditeur
+│   │   ├── config.yml         ← la seule ligne à adapter s’y trouve (`repo`)
+│   │   └── index.html
+│   ├── contenus/             Les contenus, un fichier par fiche
+│   │   ├── actualites/
+│   │   ├── agenda/
+│   │   └── galeries/
+│   ├── medias/               Les photos envoyées depuis /admin
+│   ├── index.njk             Page d’accueil
+│   ├── actualites.njk        Liste des actualités
+│   ├── agenda.njk            Agenda
+│   ├── galeries.njk          Liste des galeries
+│   └── contact.njk           Page de contact
+│
+├── eleventy.config.mjs      Réglages techniques (rarement à toucher)
+├── netlify.toml             Réglages d’hébergement
+├── scripts/admin.mjs        Lance le pont local de `npm run admin`
+│
+├── css/ scss/ fonts/ images/   LE TEMPLATE Les Scouts (charte graphique)
+├── documentation/ exemples/    Documentation et exemples du template
+├── TEMPLATE.md                 Le README d’origine du template
+│
+└── _site/                   Le site généré (jamais à modifier à la main)
+```
+
+Pour mettre le template graphique à jour, récupère la dernière version depuis
+[le dépôt du template](https://github.com/lesscouts/template-unite) et
+recompile avec `npm run compile-prod`.
+
+### Contenus d’exemple
+
+Le site est livré avec quelques actualités, activités et une galerie
+d’exemple, pour que tout soit visible dès la première mise en ligne.
+**Supprime-les depuis `/admin`** quand tu ajoutes tes propres contenus — leurs
+dates finiront de toute façon par être dépassées.
+
+## Repartir de zéro
+
+Pour remettre le site dans son état de départ, par exemple avant de le confier à
+une autre unité :
+
+```bash
+npm run reset            # les réglages seuls
+npm run reset -- --tout  # réglages + contenus d’exemple + photos
+```
+
+La commande affiche d’abord ce qu’elle va effacer et demande confirmation.
+
+Elle remet le nom de l’unité, les coordonnées, le logo et les sections à leurs
+valeurs génériques, et remplace le nom du dépôt dans `config.yml` par
+`mon-unite/mon-site`. Avec `--tout`, elle restaure aussi les contenus d’exemple
+et supprime les photos envoyées depuis `/admin`.
+
+**Une sauvegarde horodatée est créée avant toute écriture**, dans
+`.sauvegardes/`. Pour revenir en arrière, recopie le dossier de sauvegarde
+par-dessus `src/`. Ce dossier n’est pas versionné.
+
+Les valeurs de départ sont dans `scripts/defauts/` : si tu veux que « repartir de
+zéro » corresponde à ta propre base, modifie ces fichiers.

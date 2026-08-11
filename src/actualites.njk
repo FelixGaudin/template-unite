@@ -1,0 +1,20 @@
+---
+layout: layouts/base.njk
+titre: Actualités
+chapeau: Les nouvelles de l’unité.
+---
+{% include "partials/banniere.njk" %}
+
+<div class="container my-5">
+    {% if collections.actualites.length %}
+    <div class="row g-4">
+        {% for actu in collections.actualites %}
+        <div class="col-12 col-sm-6 col-lg-4">
+            {% include "partials/carte-actualite.njk" %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Aucune actualité pour le moment.</p>
+    {% endif %}
+</div>

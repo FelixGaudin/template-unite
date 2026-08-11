@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" role="img" aria-label="Photo d’exemple">
+  <title>Photo d’illustration</title>
+  <rect width="800" height="500" fill="#95C11F"/>
+  <text x="400" y="250" fill="#0A4275" text-anchor="middle" dominant-baseline="middle"
+        font-family="sans-serif" font-size="34">Photo d’illustration</text>
+</svg>

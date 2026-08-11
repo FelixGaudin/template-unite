@@ -1,0 +1,22 @@
+{#
+    Bandeau de titre de page.
+
+    Le décor « topping » est purement décoratif : il se réduit tout seul sur
+    téléphone. `overflow-hidden` le recadre sur le bandeau, ce qui donne le
+    motif « coupé » de la charte graphique et évite qu'il ne bave en blanc sur
+    le fond très clair de la page, juste en dessous.
+#}
+<div class="{{ couleur or unite.couleur_banniere }} overflow-hidden">
+    <div class="container">
+        <div class="row topping-{{ decor or unite.branche_decor }} topping-white topping-bottom-overflow topping-right topping-large">
+            <div class="col-12 col-md-11 offset-md-1 pb-5 mt-4 mt-md-5">
+                <h1 class="mb-4 mt-md-5">{{ titre_banniere or titre }}</h1>
+                {% if chapeau %}
+                <div class="pb-5">
+                    <p class="mb-0">{{ chapeau }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<header>
+    <div class="container-fluid">
+        <div class="row bg-ls-vert-fonce">
+            <div class="col">
+                <div class="m-2">
+                    <a href="https://lesscouts.be/" target="_blank" rel="noopener" title="Aller sur le site de la fédération Les Scouts" class="d-inline-block py-1">
+                        <i class="bi-chevron-left"></i> Les Scouts asbl
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container">
+                    {#
+                        Le logo de l'unité s'il y en a un, sinon celui de la fédération.
+                        Pour le logo par défaut on connaît les dimensions, donc on les
+                        déclare : le navigateur réserve la place et la page ne sursaute
+                        pas au chargement. Pour un logo envoyé depuis /admin on ne les
+                        connaît pas, et les imposer déformerait l'image — c'est la
+                        hauteur maximale définie dans le CSS du template qui l'encadre.
+                    #}
+                    <a class="navbar-brand" href="/">
+                        {% if unite.logo %}
+                        <img src="{{ unite.logo }}" alt="{{ unite.logo_alt or unite.nom }}">
+                        {% else %}
+                        <img src="/template/images/logos/logo_Federation_couleur_baseline_562x236.png" alt="{{ unite.nom }}" width="281" height="118">
+                        {% endif %}
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-principal" aria-controls="menu-principal" aria-expanded="false" aria-label="Basculer le menu">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="menu-principal">
+                        <ul class="navbar-nav me-2 mb-2 mb-lg-0 fw-bold">
+                            <li class="nav-item px-lg-3">
+                                <a class="nav-link text-primary{% if page.url == '/' %} active{% endif %}" href="/"{% if page.url == '/' %} aria-current="page"{% endif %}>Accueil</a>
+                            </li>
+                            <li class="nav-item px-lg-3">
+                                <a class="nav-link text-primary{% if '/actualites/' in page.url %} active{% endif %}" href="/actualites/">Actualités</a>
+                            </li>
+                            <li class="nav-item px-lg-3">
+                                <a class="nav-link text-primary{% if '/agenda/' in page.url %} active{% endif %}" href="/agenda/">Agenda</a>
+                            </li>
+                            <li class="nav-item px-lg-3">
+                                <a class="nav-link text-primary{% if '/galeries/' in page.url %} active{% endif %}" href="/galeries/">Photos</a>
+                            </li>
+                            <li class="nav-item px-lg-3">
+                                <a class="nav-link text-primary{% if '/contact/' in page.url %} active{% endif %}" href="/contact/">Contact</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>

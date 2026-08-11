@@ -1,0 +1,28 @@
+---
+layout: layouts/base.njk
+---
+{% set titre_banniere = titre %}
+{% set chapeau = resume %}
+{% include "partials/banniere.njk" %}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-1">
+            <p class="small text-muted">
+                Publié le <time datetime="{{ date | dateISO }}">{{ date | dateFR }}</time>
+            </p>
+
+            {% if image %}
+            <img src="{{ image }}" class="img-fluid mb-4" alt="{{ image_alt or titre }}">
+            {% endif %}
+
+            {{ content | safe }}
+
+            <p class="mt-5">
+                <a href="/actualites/" class="fw-bold d-inline-block py-2">
+                    <i class="bi-chevron-left"></i> Toutes les actualités
+                </a>
+            </p>
+        </div>
+    </div>
+</div>

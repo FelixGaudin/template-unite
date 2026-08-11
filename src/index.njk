@@ -1,0 +1,142 @@
+---
+layout: layouts/base.njk
+titre: Accueil
+---
+{% set titre_banniere = unite.nom %}
+{% set chapeau = unite.accroche %}
+{% include "partials/banniere.njk" %}
+
+<div class="container mb-5">
+
+    <div class="row mt-5">
+        <div class="col-12 col-lg-10 offset-lg-1">
+            <p>{{ unite.presentation }}</p>
+        </div>
+    </div>
+
+    {% set actualites = collections.actualites | limite(3) %}
+    {% if actualites.length %}
+    <div class="row mt-5">
+        {#
+            Décor en couleur, et non `topping-white` : le fond de la page est
+            très clair, un motif blanc y serait quasi invisible.
+        #}
+        <div class="col-md-10 topping-{{ unite.branche_decor }} topping-top-overflow topping-left-overflow mb-4">
+            <div class="above-topping">
+                <h2>actualités</h2>
+            </div>
+        </div>
+        <div class="col-md-2 fw-bold text-end">
+            <a href="/actualites/" class="d-inline-block py-2">Toutes <i class="bi-chevron-right"></i></a>
+        </div>
+    </div>
+    <div class="row g-4 mb-5">
+        {% for actu in actualites %}
+        <div class="col-12 col-sm-6 col-lg-4">
+            {% include "partials/carte-actualite.njk" %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% set prochaines = collections.agenda | aVenir | limite(4) %}
+    {% if prochaines.length %}
+    <div class="row mt-5">
+        <div class="col">
+            <h2>prochaines activités</h2>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12 col-lg-10">
+            {% for activite in prochaines %}
+            {% include "partials/ligne-activite.njk" %}
+            {% endfor %}
+            <p class="text-end">
+                <a href="/agenda/" class="fw-bold d-inline-block py-2">Tout l’agenda <i class="bi-chevron-right"></i></a>
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% set galeries = collections.galeries | limite(3) %}
+    {% if galeries.length %}
+    <div class="row mt-5">
+        <div class="col">
+            <h2>en photos</h2>
+        </div>
+    </div>
+    <div class="row g-4 mt-2 mb-5">
+        {% for galerie in galeries %}
+        <div class="col-12 col-sm-6 col-lg-4">
+            <a href="{{ galerie.url }}" class="text-decoration-none">
+                <div class="card h-100">
+                    {% if galerie.data.photos and galerie.data.photos.length %}
+                    <img src="{{ galerie.data.photos[0].image }}" class="card-img-top" alt="{{ galerie.data.titre }}" loading="lazy">
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="card-title h5 mb-1">{{ galerie.data.titre }}</h3>
+                        <p class="small text-muted mb-0">
+                            {{ galerie.data.photos.length }} photo{% if galerie.data.photos.length > 1 %}s{% endif %}
+                            {% if galerie.data.section %} − {{ galerie.data.section }}{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row mt-5">
+        <div class="col">
+            <h2>informations pratiques</h2>
+        </div>
+    </div>
+    <div class="row g-4 mt-2">
+        <div class="col-12 col-md-6">
+            <h3 class="h4">{{ unite.locaux.nom }}</h3>
+            <address>{{ unite.locaux.adresse }}</address>
+            <p>{{ unite.locaux.informations }}</p>
+            {% if unite.locaux.lien_itineraire %}
+            <p>
+                <a href="{{ unite.locaux.lien_itineraire }}" class="fw-bold d-inline-block py-2" target="_blank" rel="noopener">
+                    Itinéraire <i class="bi-chevron-right"></i>
+                </a>
+            </p>
+            {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+            <h3 class="h4">Contact</h3>
+            <p class="mb-1"><strong>{{ unite.contact.responsable }}</strong></p>
+            <p class="small text-muted">{{ unite.contact.fonction }}</p>
+            <address>
+                {% if unite.contact.telephone %}
+                <i class="bi-telephone"></i>
+                <a href="tel:{{ unite.contact.telephone | replace(' ', '') }}">{{ unite.contact.telephone }}</a>
+                {% if unite.contact.telephone_precision %}<span class="text-muted">({{ unite.contact.telephone_precision }})</span>{% endif %}
+                <br>
+                {% endif %}
+                <i class="bi-envelope"></i> <a href="/contact/">Formulaire de contact</a>
+            </address>
+        </div>
+    </div>
+
+    {% if unite.sections.length %}
+    <div class="row mt-5">
+        <div class="col">
+            <h2>nos sections</h2>
+        </div>
+    </div>
+    <div class="row g-4 mt-2">
+        {% for section in unite.sections %}
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="{{ section.couleur }} p-4 h-100 bg-topping bg-topping-right bg-topping-{{ section.decor }} bg-topping-opacity-20">
+                <h3 class="h4 mb-1">{{ section.nom }}</h3>
+                <p class="mb-0">{{ section.ages }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>

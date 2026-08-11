@@ -1,0 +1,30 @@
+{# Une activité de l'agenda, en ligne dans une liste #}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="row g-3 align-items-start">
+            <div class="col-12 col-sm-3">
+                <p class="fw-bold mb-0">
+                    <time datetime="{{ activite.data.date | dateISO }}">{{ activite.data.date | dateFR }}</time>
+                </p>
+                {% if activite.data.date_fin %}
+                <p class="small text-muted mb-0">
+                    jusqu’au <time datetime="{{ activite.data.date_fin | dateISO }}">{{ activite.data.date_fin | dateFR }}</time>
+                </p>
+                {% endif %}
+                {% if activite.data.heure %}
+                <p class="small text-muted mb-0"><i class="bi-clock"></i> {{ activite.data.heure }}</p>
+                {% endif %}
+            </div>
+            <div class="col-12 col-sm-9">
+                <h3 class="h5 mb-1">{{ activite.data.titre }}</h3>
+                <p class="small text-muted mb-2">
+                    {% if activite.data.section %}<span class="me-3"><i class="bi-people"></i> {{ activite.data.section }}</span>{% endif %}
+                    {% if activite.data.lieu %}<span><i class="bi-geo-alt"></i> {{ activite.data.lieu }}</span>{% endif %}
+                </p>
+                {% if activite.data.description %}
+                <p class="mb-0">{{ activite.data.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

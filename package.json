@@ -1,13 +1,13 @@
 {
   "name": "@lesscouts/template-unite",
   "version": "1.0.0",
-  "description": "Template pour les sites d’unité Les Scouts",
+  "description": "Site d’unité Les Scouts : site public + interface d’administration",
   "author": "Les Scouts asbl (https://lesscouts.be/)",
   "contributors": [
     "Les Scouts asbl"
   ],
   "license": "MIT",
-  "private": false,
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lesscouts/template-unite.git"
@@ -16,6 +16,11 @@
     "bootstrap": "^5.1.3"
   },
   "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy",
+    "admin": "node scripts/admin.mjs",
+    "reset": "node scripts/reset.mjs",
+    "clean": "rm -rf _site",
     "compile-dev": "sass scss:css",
     "compile-prod": "sass scss:css --style compressed --no-source-map"
   },
@@ -23,8 +28,10 @@
     "url": "https://github.com/lesscouts/template-unite/issues"
   },
   "homepage": "https://template.lesscouts.be/",
-  "main": "index.html",
   "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "decap-server": "^3.10.0",
+    "markdown-it": "^15.0.0",
     "sass": "^1.102.0"
   }
 }

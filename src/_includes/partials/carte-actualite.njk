@@ -1,0 +1,23 @@
+{#
+    Carte d'actualité.
+    Pas de hauteur fixe : `h-100` aligne les cartes d'une même rangée et
+    `mt-auto` colle le lien en bas, quelle que soit la longueur du texte.
+#}
+<div class="card h-100">
+    {% if actu.data.image %}
+    <img src="{{ actu.data.image }}" class="card-img-top" alt="{{ actu.data.image_alt or actu.data.titre }}" loading="lazy">
+    {% endif %}
+    <div class="card-body d-flex flex-column">
+        <p class="small text-muted mb-2">
+            <time datetime="{{ actu.data.date | dateISO }}">{{ actu.data.date | dateFR }}</time>
+        </p>
+        <hr>
+        <h3 class="card-title h5">{{ actu.data.titre }}</h3>
+        {% if actu.data.resume %}
+        <p class="card-text">{{ actu.data.resume }}</p>
+        {% endif %}
+        <p class="card-text text-end mt-auto mb-0">
+            <a href="{{ actu.url }}" class="fw-bold d-inline-block py-2">En savoir plus <i class="bi-chevron-right"></i></a>
+        </p>
+    </div>
+</div>

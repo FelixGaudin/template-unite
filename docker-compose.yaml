@@ -1,0 +1,45 @@
+# Site + administration en local, sans installer Node sur sa machine.
+#
+#   docker compose up
+#
+#   · le site           http://localhost:8080/
+#   · l’administration  http://localhost:8080/admin/
+#
+# Les fichiers du dépôt sont montés dans les conteneurs : les modifications
+# faites depuis /admin sont écrites directement sur ta machine, et le site se
+# reconstruit tout seul.
+
+services:
+  # Construit le site et le sert, en surveillant les modifications.
+  site:
+    build:
+      context: .
+      target: developpement
+    command: npm start
+    ports:
+      - '8080:8080'
+    volumes:
+      - .:/site
+      # Les dépendances installées dans l’image ne doivent pas être masquées
+      # par le node_modules de la machine hôte, qui peut être absent ou
+      # contenir des binaires compilés pour un autre système.
+      - deps:/site/node_modules
+    # Les fichiers écrits dans le volume appartiennent à cet utilisateur.
+    # Sans cela, ils appartiendraient à root sur ta machine.
+    user: '${UID:-1000}:${GID:-1000}'
+
+  # Le pont qui permet à /admin d’écrire dans les fichiers du dépôt.
+  admin:
+    build:
+      context: .
+      target: developpement
+    command: npm run admin
+    ports:
+      - '8081:8081'
+    volumes:
+      - .:/site
+      - deps:/site/node_modules
+    user: '${UID:-1000}:${GID:-1000}'
+
+volumes:
+  deps:

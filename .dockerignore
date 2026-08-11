@@ -1,0 +1,18 @@
+# Ce qui n’a pas à entrer dans l’image : soit c’est régénéré, soit c’est lourd,
+# soit ça n’a rien à faire dans une image publiée.
+node_modules
+_site
+.sauvegardes
+.git
+.gitignore
+
+# Documentation et exemples du template graphique : utiles dans le dépôt,
+# inutiles dans l’image du site.
+documentation
+exemples
+
+# Le site est construit dans l’image, pas besoin des outils d’édition
+.vscode
+.idea
+*.log
+npm-debug.log*

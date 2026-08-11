@@ -1,0 +1,5 @@
+{
+  "layout": "layouts/activite.njk",
+  "permalink": "/agenda/{{ page.fileSlug }}/",
+  "tags": "activite"
+}

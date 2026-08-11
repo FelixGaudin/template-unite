@@ -1,0 +1,404 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Configuration de l’administration du site
+#
+#  Ce fichier est lu à l’identique par Decap CMS (livré par défaut, interface en
+#  français) et par Sveltia CMS. Changer d’outil ne demande donc rien ici.
+#
+#  ⚠ UNE SEULE LIGNE EST À ADAPTER AVANT LA MISE EN LIGNE : `repo` ci-dessous.
+#     Remplace `mon-unite/mon-site` par le nom de ton dépôt sur GitHub.
+#
+#  Les chemins ci-dessous sont relatifs à la racine du dépôt.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Langue de l’interface d’administration.
+locale: fr
+
+# Permet d’essayer l’administration depuis son ordinateur, sans compte GitHub :
+# elle écrit alors directement dans les fichiers du dossier (voir `npm run admin`
+# dans le README). Ce réglage n’a aucun effet sur le site publié — il n’est pris
+# en compte que sur localhost.
+local_backend: true
+
+backend:
+  name: github
+  repo: mon-unite/mon-site
+  branch: main
+
+  # Texte enregistré dans l’historique des modifications à chaque action.
+  # Attention : ces réglages doivent bien rester à l’intérieur de `backend`.
+  commit_messages:
+    create: 'Ajout de {{collection}} « {{slug}} »'
+    update: 'Mise à jour de {{collection}} « {{slug}} »'
+    delete: 'Suppression de {{collection}} « {{slug}} »'
+    uploadMedia: 'Ajout de la photo « {{path}} »'
+    deleteMedia: 'Suppression de la photo « {{path}} »'
+
+# Où sont rangées les photos envoyées depuis l’administration,
+# et sous quelle adresse le site les affiche.
+media_folder: src/medias
+public_folder: /medias
+
+collections:
+  # ───────────────────────────── Actualités ─────────────────────────────
+  - name: actualites
+    label: Actualités
+    label_singular: Actualité
+    description: >
+      Les nouvelles de l’unité. Les trois plus récentes apparaissent
+      automatiquement sur la page d’accueil.
+    folder: src/contenus/actualites
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    sortable_fields: [date, titre]
+    view_filters:
+      - label: Cette année
+        field: date
+        pattern: '{{year}}'
+    summary: '{{titre}} — {{date | date("DD/MM/YYYY")}}'
+    fields:
+      - label: Titre
+        name: titre
+        widget: string
+        hint: Le titre affiché en haut de l’actualité et sur la page d’accueil.
+
+      - label: Date
+        name: date
+        widget: datetime
+        time_format: false
+        format: 'YYYY-MM-DD'
+        date_format: 'DD/MM/YYYY'
+        hint: La date de publication. Elle sert aussi à classer les actualités.
+
+      - label: Résumé
+        name: resume
+        widget: text
+        required: false
+        hint: Deux ou trois phrases, affichées sur la carte de la page d’accueil.
+
+      - label: Photo
+        name: image
+        widget: image
+        required: false
+        choose_url: false
+        hint: Facultatif. Une photo au format paysage rend mieux.
+
+      - label: Description de la photo
+        name: image_alt
+        widget: string
+        required: false
+        hint: >
+          Décris la photo en quelques mots. C’est ce que lisent les personnes
+          aveugles ou malvoyantes, et ce qui s’affiche si la photo ne charge pas.
+
+      - label: Texte
+        name: body
+        widget: markdown
+        hint: Le contenu complet de l’actualité.
+
+  # ─────────────────────────────── Agenda ───────────────────────────────
+  - name: agenda
+    label: Agenda
+    label_singular: Activité
+    description: >
+      Les activités de l’unité. Le site fait le tri tout seul : les activités
+      encore à venir apparaissent en premier, les anciennes basculent
+      automatiquement dans « activités passées ».
+    folder: src/contenus/agenda
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    sortable_fields: [date, titre]
+    summary: '{{titre}} — {{date | date("DD/MM/YYYY")}}'
+    fields:
+      - label: Titre
+        name: titre
+        widget: string
+        hint: Par exemple « Fête de passage » ou « Hike des Éclaireurs ».
+
+      - label: Date
+        name: date
+        widget: datetime
+        time_format: false
+        format: 'YYYY-MM-DD'
+        date_format: 'DD/MM/YYYY'
+        hint: Le jour de l’activité, ou son premier jour si elle dure plus longtemps.
+
+      - label: Date de fin
+        name: date_fin
+        widget: datetime
+        time_format: false
+        format: 'YYYY-MM-DD'
+        date_format: 'DD/MM/YYYY'
+        required: false
+        hint: >
+          À remplir seulement si l’activité dure plusieurs jours (week-end, camp).
+          L’activité reste affichée comme « à venir » jusqu’à cette date.
+
+      - label: Heure
+        name: heure
+        widget: string
+        required: false
+        pattern: ['^([01]?[0-9]|2[0-3]):[0-5][0-9]$', 'Indique une heure sous la forme 14:00']
+        hint: L’heure de rendez-vous, sous la forme 14:00. Laisse vide si ce n’est pas fixé.
+
+      - label: Lieu
+        name: lieu
+        widget: string
+        required: false
+        hint: Par exemple « Locaux de l’unité » ou « Gare de Namur ».
+
+      - label: Section concernée
+        name: section
+        widget: select
+        required: false
+        options:
+          - Toutes les sections
+          - Baladins
+          - Louveteaux
+          - Éclaireurs
+          - Pionniers
+          - Staff d’unité
+        hint: Qui est attendu à cette activité.
+
+      - label: Description
+        name: description
+        widget: text
+        required: false
+        hint: >
+          Ce qu’il faut savoir : matériel à prévoir, tenue, heure de fin…
+
+      - label: Informations complémentaires
+        name: body
+        widget: markdown
+        required: false
+        hint: Facultatif. Pour un texte plus long, avec des listes ou des liens.
+
+  # ─────────────────────────────── Galeries ─────────────────────────────
+  - name: galeries
+    label: Galeries photos
+    label_singular: Galerie
+    description: >
+      Les albums photos. Ajoute autant de photos que tu veux dans une galerie :
+      elles se réorganisent d’elles-mêmes selon la taille de l’écran.
+    folder: src/contenus/galeries
+    create: true
+    slug: '{{year}}-{{month}}-{{slug}}'
+    sortable_fields: [date, titre]
+    summary: '{{titre}} — {{date | date("MM/YYYY")}}'
+    fields:
+      - label: Titre
+        name: titre
+        widget: string
+        hint: Par exemple « Camp d’été en Ardenne ».
+
+      - label: Date
+        name: date
+        widget: datetime
+        time_format: false
+        format: 'YYYY-MM-DD'
+        date_format: 'DD/MM/YYYY'
+        hint: La date de l’activité photographiée.
+
+      - label: Section
+        name: section
+        widget: select
+        required: false
+        options:
+          - Toutes les sections
+          - Baladins
+          - Louveteaux
+          - Éclaireurs
+          - Pionniers
+
+      - label: Description
+        name: description
+        widget: text
+        required: false
+        hint: Une phrase de présentation de l’album.
+
+      - label: Photos
+        name: photos
+        widget: list
+        label_singular: Photo
+        summary: '{{fields.legende}}'
+        hint: >
+          Tu peux déposer plusieurs photos d’un coup, puis les réordonner en les
+          faisant glisser.
+        fields:
+          - label: Photo
+            name: image
+            widget: image
+            choose_url: false
+          - label: Légende
+            name: legende
+            widget: string
+            required: false
+            hint: >
+              Décris la photo en quelques mots. La légende s’affiche sous la
+              photo et sert aussi aux personnes malvoyantes.
+
+      - label: Texte d’introduction
+        name: body
+        widget: markdown
+        required: false
+
+  # ──────────────────────────────── Réglages ────────────────────────────
+  - name: reglages
+    label: Réglages du site
+    description: Les informations qui apparaissent un peu partout sur le site.
+    files:
+      - name: unite
+        label: Mon unité
+        file: src/_data/unite.json
+        description: >
+          Nom de l’unité, texte de présentation, coordonnées, sections et
+          pied de page.
+        fields:
+          - label: Nom de l’unité
+            name: nom
+            widget: string
+            hint: Tel qu’il apparaît dans le titre du site. Par exemple « Unité Sainte-Anne ».
+
+          - label: Nom court
+            name: nom_court
+            widget: string
+            required: false
+            hint: Utilisé quand la place manque. Par exemple « Sainte-Anne ».
+
+          - label: Logo de l’unité
+            name: logo
+            widget: image
+            required: false
+            choose_url: false
+            hint: >
+              Le logo affiché en haut à gauche de chaque page. Laisse vide pour
+              utiliser le logo de la fédération. Un fichier PNG à fond
+              transparent, plus large que haut, donne le meilleur résultat.
+
+          - label: Description du logo
+            name: logo_alt
+            widget: string
+            required: false
+            hint: >
+              Ce que représente le logo, en quelques mots. Utile aux personnes
+              malvoyantes. Si tu laisses vide, le nom de l’unité sera utilisé.
+
+          - label: Phrase d’accueil
+            name: accroche
+            widget: string
+            hint: La phrase affichée sous le nom de l’unité, en haut de la page d’accueil.
+
+          - label: Texte de présentation
+            name: presentation
+            widget: text
+            hint: Quelques lignes pour présenter l’unité aux nouvelles familles.
+
+          - label: Couleur du bandeau
+            name: couleur_banniere
+            widget: select
+            options:
+              - { label: 'Bleu foncé', value: 'bg-primary' }
+              - { label: 'Vert clair', value: 'bg-ls-vert-base' }
+              - { label: 'Vert foncé', value: 'bg-ls-vert-fonce' }
+              - { label: 'Turquoise', value: 'bg-ls-turquoise' }
+              - { label: 'Prune', value: 'bg-ls-prune' }
+              - { label: 'Orange', value: 'bg-ls-orange' }
+            hint: La couleur de fond du bandeau de titre, en haut de chaque page.
+
+          - label: Décor du bandeau
+            name: branche_decor
+            widget: select
+            options:
+              - { label: 'Fédération', value: 'federation' }
+              - { label: 'Baladins', value: 'baladins' }
+              - { label: 'Louveteaux', value: 'louveteaux' }
+              - { label: 'Éclaireurs', value: 'eclaireurs' }
+              - { label: 'Pionniers', value: 'pionniers' }
+            hint: Le motif décoratif de la charte graphique utilisé dans le bandeau.
+
+          - label: Locaux
+            name: locaux
+            widget: object
+            fields:
+              - { label: 'Titre', name: nom, widget: string }
+              - { label: 'Adresse', name: adresse, widget: string }
+              - label: Lien vers un itinéraire
+                name: lien_itineraire
+                widget: string
+                required: false
+                hint: L’adresse d’une carte en ligne. Laisse vide pour ne pas afficher le lien.
+              - label: Informations
+                name: informations
+                widget: text
+                required: false
+                hint: Jours et heures de réunion, accès, parking…
+
+          - label: Contact
+            name: contact
+            widget: object
+            fields:
+              - { label: 'Responsable', name: responsable, widget: string }
+              - { label: 'Fonction', name: fonction, widget: string }
+              - { label: 'Téléphone', name: telephone, widget: string, required: false }
+              - label: Précision sur le téléphone
+                name: telephone_precision
+                widget: string
+                required: false
+                hint: Par exemple « après 17h en semaine ».
+              - { label: 'Adresse email', name: email, widget: string, required: false }
+              - label: Adresse de traitement du formulaire
+                name: formulaire_action
+                widget: string
+                required: false
+                hint: >
+                  Laisse vide si tu n’as pas encore de service d’envoi de
+                  formulaire. La procédure est expliquée dans le fichier
+                  README.md.
+
+          - label: Sections
+            name: sections
+            widget: list
+            label_singular: Section
+            summary: '{{fields.nom}} ({{fields.ages}})'
+            fields:
+              - { label: 'Nom', name: nom, widget: string }
+              - { label: 'Âges', name: ages, widget: string }
+              - label: Couleur
+                name: couleur
+                widget: select
+                options:
+                  - { label: 'Baladins (bleu clair)', value: 'bg-ls-baladins' }
+                  - { label: 'Louveteaux (vert)', value: 'bg-ls-louveteaux' }
+                  - { label: 'Éclaireurs (bleu)', value: 'bg-ls-eclaireurs' }
+                  - { label: 'Pionniers (rouge)', value: 'bg-ls-pionniers' }
+              - label: Décor
+                name: decor
+                widget: select
+                options: [baladins, louveteaux, eclaireurs, pionniers, federation]
+
+          - label: Pied de page
+            name: pied_de_page
+            widget: object
+            fields:
+              - label: Phrase d’appartenance
+                name: mention
+                widget: markdown
+                required: false
+                # Barre d’outils volontairement réduite : pour une seule phrase,
+                # les titres et les listes n’ont pas de sens.
+                buttons: [bold, italic, link]
+                editor_components: []
+                minimal: true
+                hint: >
+                  La phrase centrée en haut du pied de page. Laisse vide pour
+                  afficher « <nom de l’unité> est membre de Les Scouts asbl ».
+                  Tu peux sélectionner un mot et cliquer sur le bouton de lien
+                  pour le transformer en lien.
+
+              - label: Colonnes
+                name: colonnes
+                widget: list
+                label_singular: Colonne
+                summary: '{{fields.titre}}'
+                fields:
+                  - { label: 'Titre', name: titre, widget: string }
+                  - { label: 'Texte', name: texte, widget: text }

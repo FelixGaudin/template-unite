@@ -1,0 +1,48 @@
+<footer class="mt-5">
+    <div class="bg-primary py-5">
+        <div class="container">
+            <div class="row g-3">
+                <div class="col-md-12">
+                    {#
+                        Phrase libre si elle est renseignée dans l'administration,
+                        sinon une phrase construite à partir du nom de l'unité —
+                        comme ça elle reste juste même si le nom change.
+                    #}
+                    <p class="text-center">
+                        {%- if unite.pied_de_page.mention -%}
+                            {{ unite.pied_de_page.mention | markdownEnLigne | safe }}
+                        {%- else -%}
+                            {{ unite.nom }} est membre de <a href="https://lesscouts.be/">Les Scouts asbl</a>
+                        {%- endif -%}
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <a href="https://lesscouts.be/" class="d-inline-block">
+                        <img src="/template/images/logos/logo_Federation_blanc_159x61.png" alt="Les Scouts asbl" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <p class="fw-bold mb-1">{{ unite.locaux.nom }}</p>
+                    <address class="mb-0">{{ unite.locaux.adresse }}</address>
+                </div>
+                {% for colonne in unite.pied_de_page.colonnes %}
+                <div class="col-md-3">
+                    <p class="fw-bold mb-1">{{ colonne.titre }}</p>
+                    <p class="mb-0">{{ colonne.texte }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col py-3">
+                <p class="text-center text-ls-gris mb-0">
+                    &copy; Les Scouts asbl −
+                    <a href="https://lesscouts.be/mentions-legales/">Mentions légales</a> -
+                    <a href="https://lesscouts.be/vie-privee/">Vie privée</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

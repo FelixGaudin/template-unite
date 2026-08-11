@@ -1,0 +1,44 @@
+---
+layout: layouts/base.njk
+---
+{% set titre_banniere = titre %}
+{% include "partials/banniere.njk" %}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-1">
+            <dl class="row">
+                <dt class="col-sm-3">Date</dt>
+                <dd class="col-sm-9">
+                    <time datetime="{{ date | dateISO }}">{{ date | dateFR }}</time>
+                    {% if date_fin %} → <time datetime="{{ date_fin | dateISO }}">{{ date_fin | dateFR }}</time>{% endif %}
+                </dd>
+
+                {% if heure %}
+                <dt class="col-sm-3">Heure</dt>
+                <dd class="col-sm-9">{{ heure }}</dd>
+                {% endif %}
+
+                {% if lieu %}
+                <dt class="col-sm-3">Lieu</dt>
+                <dd class="col-sm-9">{{ lieu }}</dd>
+                {% endif %}
+
+                {% if section %}
+                <dt class="col-sm-3">Section</dt>
+                <dd class="col-sm-9">{{ section }}</dd>
+                {% endif %}
+            </dl>
+
+            {% if description %}<p>{{ description }}</p>{% endif %}
+
+            {{ content | safe }}
+
+            <p class="mt-5">
+                <a href="/agenda/" class="fw-bold d-inline-block py-2">
+                    <i class="bi-chevron-left"></i> Tout l’agenda
+                </a>
+            </p>
+        </div>
+    </div>
+</div>

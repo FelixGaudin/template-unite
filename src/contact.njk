@@ -1,0 +1,78 @@
+---
+layout: layouts/base.njk
+titre: Contact
+chapeau: Une question ? Écris-nous, nous revenons vers toi rapidement.
+---
+{% include "partials/banniere.njk" %}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 col-lg-7 offset-lg-1">
+
+            <p class="mb-1"><strong>{{ unite.contact.responsable }}</strong></p>
+            <p class="small text-muted">{{ unite.contact.fonction }}</p>
+            <address>
+                {% if unite.contact.telephone %}
+                <i class="bi-telephone"></i>
+                <a href="tel:{{ unite.contact.telephone | replace(' ', '') }}">{{ unite.contact.telephone }}</a>
+                {% if unite.contact.telephone_precision %}<span class="text-muted">({{ unite.contact.telephone_precision }})</span>{% endif %}
+                <br>
+                {% endif %}
+                {% if unite.contact.email %}
+                <i class="bi-envelope"></i> <a href="mailto:{{ unite.contact.email }}">{{ unite.contact.email }}</a>
+                {% endif %}
+            </address>
+
+            <h2 class="mt-5">Formulaire</h2>
+
+            {% if unite.contact.formulaire_action %}
+            {#
+                Un site statique ne peut pas traiter un envoi de formulaire lui-même.
+                `formulaire_action` doit contenir l'adresse d'un service qui s'en charge
+                (Formspree, Netlify Forms…). Voir README.md.
+            #}
+            <form action="{{ unite.contact.formulaire_action }}" method="POST">
+                <div class="mb-3">
+                    <label for="nom" class="form-label">Ton nom complet</label>
+                    <input type="text" class="form-control" id="nom" name="nom" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Ton adresse email</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="email-prefix"><i class="bi-envelope"></i></span>
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="email-prefix" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="destinataire" class="form-label">Qui veux-tu contacter ?</label>
+                    <select name="destinataire" id="destinataire" class="form-select">
+                        <option value="Unité" selected>{{ unite.contact.fonction }}</option>
+                        {% for section in unite.sections %}
+                        <option value="{{ section.nom }}">Le staff {{ section.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Ton message</label>
+                    <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
+            {% else %}
+            <div class="bg-warning p-3">
+                <p class="mb-0">
+                    <i class="bi-exclamation-triangle-fill me-2"></i>
+                    Le formulaire n’est pas encore branché. En attendant, écris directement à
+                    {% if unite.contact.email %}<a href="mailto:{{ unite.contact.email }}">{{ unite.contact.email }}</a>{% else %}l’adresse de l’unité{% endif %}.
+                </p>
+            </div>
+            <p class="small text-muted mt-3">
+                Pour activer le formulaire, renseigne le champ « Adresse de traitement du formulaire »
+                dans l’administration du site (Réglages → Contact). La procédure est expliquée dans
+                le fichier <code>README.md</code>.
+            </p>
+            {% endif %}
+
+        </div>
+    </div>
+</div>

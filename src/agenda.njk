@@ -1,0 +1,37 @@
+---
+layout: layouts/base.njk
+titre: Agenda
+chapeau: Les prochaines activités de l’unité.
+---
+{% include "partials/banniere.njk" %}
+
+<div class="container my-5">
+    {% set prochaines = collections.agenda | aVenir %}
+    {% set anciennes = collections.agenda | passees | limite(10) %}
+
+    <div class="row">
+        <div class="col-12 col-lg-10">
+            {% if prochaines.length %}
+                {% for activite in prochaines %}
+                {% include "partials/ligne-activite.njk" %}
+                {% endfor %}
+            {% else %}
+                <p>Aucune activité programmée pour l’instant. Reviens bientôt !</p>
+            {% endif %}
+
+            {% if anciennes.length %}
+            <h2 class="h4 mt-5">Activités passées</h2>
+            <ul class="list-unstyled mt-3">
+                {% for activite in anciennes %}
+                <li class="border-bottom py-2">
+                    <a href="{{ activite.url }}" class="d-inline-block py-1">
+                        <time datetime="{{ activite.data.date | dateISO }}">{{ activite.data.date | dateCourteFR }}</time>
+                        − {{ activite.data.titre }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
