@@ -137,14 +137,16 @@ Cette section est destinée aux utilisateurs avancés qui ne se contentent pas d
 Tu ne dois compiler le template que si tu contribues au code du template ou si tu veux rassembler Bootstrap, le template 
 Les Scouts et ton code CSS dans un même fichier CSS.
 
-Pour cela, tu auras besoin d’installer [Node.js](https://nodejs.org/en/download/), 
-[npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) et [SASS](https://sass-lang.com/install).
+Pour cela, tu auras besoin d’installer [Node.js](https://nodejs.org/en/download/) et 
+[npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
 **Installer les dépendances**
 
 ```bash
 $ npm install
 ```
+
+Cette commande installe Bootstrap ainsi que [SASS](https://sass-lang.com/), qui compile les feuilles de styles.
 
 **Compiler les fichiers en CSS**
 

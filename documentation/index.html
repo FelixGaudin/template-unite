@@ -146,10 +146,11 @@
             <div>
                 <div class="bd-example">
                     <p>Pour te donner une idée de ce qu’il est possible de créer, voici quelques exemples de pages :</p>
+                    <!-- `py-1` : des liens seuls dans une liste, assez hauts pour être visés au doigt -->
                     <ul>
-                        <li><a href="../exemples/index.html">Page d’accueil</a></li>
-                        <li><a href="../exemples/inscription.html">Formulaire de demande d’inscription</a></li>
-                        <li><a href="../exemples/contact.html">Formulaire de contact</a></li>
+                        <li><a href="../exemples/index.html" class="d-inline-block py-1">Page d’accueil</a></li>
+                        <li><a href="../exemples/inscription.html" class="d-inline-block py-1">Formulaire de demande d’inscription</a></li>
+                        <li><a href="../exemples/contact.html" class="d-inline-block py-1">Formulaire de contact</a></li>
                     </ul>
                 </div>
             </div>
@@ -165,6 +166,8 @@
                 <div class="bd-example">
                     <p>Les polices recommandées dans notre charte graphique sont activées dans le template. 
                         La police principale (Muli) s’applique par défaut. Utilise les classes ci-dessous pour personnaliser le contenu.</p>
+                    <!-- `table-responsive` : un tableau large défile horizontalement au lieu de déborder de l’écran -->
+                    <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
                         <tr>
@@ -195,6 +198,7 @@
                         </tr>
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </article>
@@ -210,6 +214,8 @@
                     <div>
                         <p>La charte graphique se décline en plusieurs couleurs
                             classe CSS.</p>
+                        <!-- `table-responsive` : un tableau large défile horizontalement au lieu de déborder de l’écran -->
+                        <div class="table-responsive">
                         <table class="table table-sm table-bordered">
                             <thead>
                             <tr>
@@ -312,6 +318,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                         <p>Si tu appliques un des fonds de couleur ci-dessus, le texte du bloc sera affiché en blanc par défaut.
                             Libre à toi de modifier la couleur du texte pour des effets créatifs : 
                             <span class="bg-ls-vert-fonce text-ls-vert-base badge">Exemple</span>
@@ -338,10 +345,10 @@
                     <p>Le logo en couleurs sur fond blanc avec la baseline est à privilégier.
                         Si le logo est plus petit (baseline peu lisible), utilise alors la version sans baseline.</p>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12 col-sm-6">
                             <img src="../images/logos/logo_Federation_couleur_baseline.png" alt="Logo de la fédération avec baseline" class="img-thumbnail">
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-sm-6">
                             <img src="../images/logos/logo_Federation_couleur_horizontal.png" alt="Logo de la fédération sans baseline" class="img-thumbnail">
                         </div>
                     </div>
@@ -351,22 +358,22 @@
                     <p>Et si tu souhaites l’afficher sur un fond d’une couleur particulière, choisis plutôt une version monochrome du logo sans fond.
                         Choisis la couleur qui ressort le mieux suivant le fond.</p>
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <div class="img-thumbnail">
                                 <img src="../images/logos/logo_Federation_blanc.png" alt="Logo de la fédération blanc" class="bg-dark img-fluid">
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <div class="img-thumbnail">
                                 <img src="../images/logos/logo_Federation_bleu.png" alt="Logo de la fédération bleu" class="bg-ls-vert-base img-fluid">
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <div class="img-thumbnail">
                                 <img src="../images/logos/logo_Federation_noir.png" alt="Logo de la fédération noir" class="bg-white img-fluid">
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <div class="img-thumbnail">
                                 <img src="../images/logos/logo_Federation_vert.png" alt="Logo de la fédération vert" class="bg-dark img-fluid">
                             </div>
@@ -378,22 +385,22 @@
                 <div class="bd-example">
                     <h4>Logos des branches</h4>
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <p class="text-center">
                                 <img src="../images/logos/logo_Baladins.png" alt="Logo de la branche Baladins" class="img-thumbnail">
                             </p>
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <p class="text-center">
                                 <img src="../images/logos/logo_Louveteaux.png" alt="Logo de la branche Louveteaux" class="img-thumbnail">
                             </p>
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <p class="text-center">
                                 <img src="../images/logos/logo_Eclaireurs.png" alt="Logo de la branche Eclaireurs" class="img-thumbnail">
                             </p>
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <p class="text-center">
                                 <img src="../images/logos/logo_Pionniers.png" alt="Logo de la branche Pionniers" class="img-thumbnail">
                             </p>
@@ -417,6 +424,8 @@
                     <div>
                         <p>Des éléments décoratifs peuvent être ajoutés à n’importe quel bloc à l’aide d’une
                             classe CSS.</p>
+                        <!-- `table-responsive` : un tableau large défile horizontalement au lieu de déborder de l’écran -->
+                        <div class="table-responsive">
                         <table class="table table-sm table-bordered">
                             <thead>
                             <tr>
@@ -468,6 +477,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -483,8 +493,20 @@
                         <p>Pour remplacer la décoration par son équivalent en blanc, ajoute la classe <code>topping-white</code>.</p>
                         
                         <h4>Variation sur la dimension</h4>
-                        <p>Par défaut, la décoration a une largeur de 200 pixels. Ajoute la classe <code>topping-large</code>
-                            pour utiliser une décoration de 400 pixels de large.</p>
+                        <p>Par défaut, la décoration a une largeur de 200 pixels au maximum. Ajoute la classe <code>topping-large</code>
+                            pour utiliser une décoration de 400 pixels de large au maximum.</p>
+                        <p>Ces largeurs sont des maximums : sur un écran étroit, la décoration se réduit
+                            automatiquement pour rester proportionnée au contenu, et se contente de déborder du bord
+                            de l’écran au lieu de le faire défiler horizontalement.</p>
+                        <p>Si tu as besoin d’une autre taille, tu peux redéfinir la largeur toi-même dans ta feuille
+                            de styles : la hauteur et tous les décalages en découlent.</p>
+                        <div class="highlight">
+                            <pre>
+.mon-bloc {
+    --ls-topping-width: min(300px, 40vw);
+}
+                            </pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -497,6 +519,8 @@
                 <div class="bd-example">
                     <div>
                         
+                        <!-- `table-responsive` : un tableau large défile horizontalement au lieu de déborder de l’écran -->
+                        <div class="table-responsive">
                         <table class="table table-sm table-bordered">
                             <thead>
                             <tr>
@@ -535,6 +559,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -546,6 +571,8 @@
             <div>
                 <div class="bd-example">
                     <div>
+                        <!-- `table-responsive` : un tableau large défile horizontalement au lieu de déborder de l’écran -->
+                        <div class="table-responsive">
                         <table class="table table-sm table-bordered">
                             <thead>
                             <tr>
@@ -580,6 +607,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                     <div class="row">
                         <h4>Quelques exemples</h4>
@@ -739,6 +767,8 @@
                 <div class="bd-example">
                     <p>Comme tu l’as vu plus haut, tu peux <a href="#couleurs">appliquer des fonds de couleur</a> aux blocs de ta page. 
                         Mais tu peux aussi combiner ces fonds de couleur avec un décor en fond qui vient s’ajouter par-dessus.</p>
+                    <!-- `table-responsive` : un tableau large défile horizontalement au lieu de déborder de l’écran -->
+                    <div class="table-responsive">
                     <table class="table table-sm table-bordered">
                         <thead>
                         <tr>
@@ -790,6 +820,7 @@
                         </tr>
                         </tbody>
                     </table>
+                    </div>
                     <p><strong>Attention</strong> <br>Si tu utilises un fond avec une décoration, place le contenu 
                         dans un bloc avec la classe <code>bg-content</code>.</p>
                     
@@ -805,7 +836,7 @@
                     <div class="my-3 bg-ls-vert-base bg-topping-federation bg-topping-large" style="height: 300px; ">
                         <div class="bg-content">
                             <div class="row">
-                                <div class="col-6 offset-3">
+                                <div class="col-12 col-md-6 offset-md-3">
                                     <p class="bg-white text-center text-dark m-5 p-5">Coucou 2</p>
                                 </div>
                             </div>
@@ -879,6 +910,8 @@
             </div>
             <div>
                 <div class="bd-example">
+                    <!-- `table-responsive` : un tableau large défile horizontalement au lieu de déborder de l’écran -->
+                    <div class="table-responsive">
                     <table class="table table-sm table-bordered">
                         <thead>
                         <tr>
@@ -905,6 +938,7 @@
                         </tr>
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </article>

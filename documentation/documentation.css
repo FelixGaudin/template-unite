@@ -103,6 +103,12 @@ body {
     margin: 0 1rem 1rem 0;
 }
 
+/* Un élément déjà large de 100 % n’a pas la place d’absorber la marge de droite
+   ci-dessus : elle provoquait un défilement horizontal sur petit écran. */
+[id="dropdowns"] .bd-example .btn-group.w-100 {
+    margin-right: 0;
+}
+
 /* Layout */
 @media (min-width: 1200px) {
     body {

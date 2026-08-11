@@ -18,6 +18,11 @@ $ls-mondial: rgb(98, 37, 153);
 $ls-blanc: rgb(255, 255, 255);
 $ls-noir: rgb(0, 0, 0);
 
+// Active les classes de marges négatives de Bootstrap (`mt-n3`, `mt-md-n5`, …),
+// utiles pour faire chevaucher deux blocs uniquement à partir d’une certaine
+// largeur d’écran, plutôt qu’avec un positionnement absolu qui ne s’adapte pas.
+$enable-negative-margins: true;
+
 // Couleurs de base
 $body-bg: rgb(242, 245, 248);
 

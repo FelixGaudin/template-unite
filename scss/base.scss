@@ -6,8 +6,56 @@
 
 //
 
+// Les décors « toppings » débordent volontairement de leur boîte, et sur un
+// téléphone ils atteignent le bord de l’écran. `clip` empêche ce débordement
+// de provoquer un défilement horizontal, sans créer de conteneur de défilement
+// comme le ferait `hidden` : `position: sticky` continue donc de fonctionner.
+// La règle est posée sur les deux éléments : sur `body` seul, la zone de
+// défilement de la page reste élargie par le débordement.
+html, body {
+    overflow-x: clip;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-weight: 700;
+}
+
+// Le logo d’une unité est souvent large : sans borne il occupe presque tout
+// l’écran d’un téléphone. On le limite en hauteur, en le laissant grandir
+// avec la place disponible.
+.navbar-brand > img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 3.5rem;
+
+    @include media-breakpoint-up(md) {
+        max-height: 5rem;
+    }
+
+    @include media-breakpoint-up(lg) {
+        max-height: 7.375rem;
+    }
+}
+
+// Sur un écran tactile, les cases à cocher et boutons radio à leur taille par
+// défaut (16 px) sont difficiles à viser, en particulier dans les formulaires
+// d’inscription. On les agrandit uniquement là où c’est utile.
+@media (pointer: coarse) {
+    .form-check-input {
+        width: 1.5em;
+        height: 1.5em;
+        margin-top: 0.05em;
+    }
+
+    .form-check {
+        padding-left: 2em;
+    }
+
+    .form-check-input[type="checkbox"],
+    .form-check-input[type="radio"] {
+        margin-left: -2em;
+    }
 }
 
     // Fonds de couleurs Les Scouts
@@ -113,23 +161,28 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 @each $shortcut, $name, $file-path-color, $file-path-white, $img-width, $img-height, $file-path-color-large, $file-path-white-large, $img-width-large, $img-height-large in $topping-images {
     .bg-topping-#{$name}, .bg-topping-#{$shortcut} {
         position: relative;
+        // Le motif est un décor : `isolation` le maintient dans cet élément pour que
+        // le `z-index: -1` du ::before ne le fasse pas passer derrière le fond d’un
+        // élément parent. Le contenu de la boîte reste donc toujours lisible au-dessus.
+        isolation: isolate;
     }
-    
+
     .bg-topping-#{$name}, .bg-topping-#{$shortcut} {
         &::before {
             content: ' ';
             display: block;
             position: absolute;
+            z-index: -1;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             opacity: 1;
             background-image: url(#{$path-toppings}#{$file-path-white});
+            pointer-events: none;
         }
         &.bg-topping-large::before {
             background-image: url(#{$path-toppings}#{$file-path-white-large});
-            // test
         }
     }
 
@@ -174,152 +227,137 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 // Toppings
 
-@each $shortcut, $name, $file-path-color, $file-path-white, $img-width, $img-height, $file-path-color-large, $file-path-white-large, $img-width-large, $img-height-large in $topping-images {
-    .topping-#{$shortcut}, .topping-#{$name} {
-        
-        position: relative;
-        
-        &::before {
-            content: url("#{$path-toppings}#{$file-path-color}");
-            position: absolute;
-        }
-        
-        &.topping-large::before {
-            content: url("#{$path-toppings}#{$file-path-color-large}");
-            position: absolute;
-        }
-        
-        &.topping-white {
-            &::before {
-                content: url("#{$path-toppings}#{$file-path-white}");
-                position: absolute;
-            }
-            
-            &.topping-large::before {
-                content: url("#{$path-toppings}#{$file-path-white-large}");
-                position: absolute;
-            }
-        }
-        
-        /* Positions verticales */
-        
-        &.topping-before {
-            &::before {
-                top: subtract(-20px, $img-height);
-            }
-            &.topping-large::before {
-                top: subtract(-20px, $img-height-large);
-            }
-        }   
-        
-        &.topping-top-overflow {
-            &::before {
-                top: subtract(0px, floor(math.div($img-height, 2)));
-            }
-            &.topping-large::before {
-                top: subtract(0px, floor(math.div($img-height-large, 2)));
-            }
-        }
-        
-        &.topping-top {
-            &::before {
-                top: 0;
-            }
-        }
-        
-        &.topping-middle {
-            &::before {
-                top: 50%;
-                margin-top: subtract(0px, floor(math.div($img-height, 2)));
-            }
-            &.topping-large::before {
-                top: 50%;
-                margin-top: subtract(0px, floor(math.div($img-height-large, 2)));
-            }
-        }
-        
-        &.topping-bottom {
-            &::before {
-                bottom: 0;
-            }
-        }
-        
-        &.topping-bottom-overflow {
-            &::before {
-                bottom: subtract(0px, floor(math.div($img-height, 2)));
-            }
-            &.topping-large::before {
-                bottom: subtract(0px, floor(math.div($img-height-large, 2)));
-            }
-        }
-        
-        &.topping-after {
-            &::before {
-                bottom: subtract(-20px, $img-height);
-            }
-            &.topping-large::before {
-                bottom: subtract(-20px, $img-height-large);
-            }
-        }
-        
-        /* Positions horizontales */
+// Chaque variante déclare sa taille et son image dans des propriétés personnalisées.
+// Les décalages ci-dessous s’appuient tous sur ces propriétés : il suffit donc de
+// redéfinir la largeur pour que le décor et son positionnement suivent, sans avoir
+// à répéter chaque règle par taille d’écran.
+//
+// `min()` borne la largeur à celle de l’image : le décor rétrécit sur un téléphone
+// et ne dépasse jamais sa taille d’origine sur un grand écran.
+$topping-hosts: ();
 
-        &.topping-left-outside {
-            &::before {
-                left: subtract(-20px, $img-width);
-            }
-            &.topping-large::before {
-                left: subtract(-20px, $img-width-large);
+@each $shortcut, $name, $file-path-color, $file-path-white, $img-width, $img-height, $file-path-color-large, $file-path-white-large, $img-width-large, $img-height-large in $topping-images {
+    $topping-hosts: append($topping-hosts, unquote(".topping-#{$shortcut}"), comma);
+    $topping-hosts: append($topping-hosts, unquote(".topping-#{$name}"), comma);
+
+    .topping-#{$shortcut}, .topping-#{$name} {
+        --ls-topping-image: url("#{$path-toppings}#{$file-path-color}");
+        --ls-topping-width: min(#{$img-width}, 30vw);
+        --ls-topping-ratio: #{math.div($img-height, $img-width)};
+
+        &.topping-large {
+            --ls-topping-image: url("#{$path-toppings}#{$file-path-color-large}");
+            --ls-topping-width: min(#{$img-width-large}, 45vw);
+            --ls-topping-ratio: #{math.div($img-height-large, $img-width-large)};
+        }
+
+        &.topping-white {
+            --ls-topping-image: url("#{$path-toppings}#{$file-path-white}");
+
+            &.topping-large {
+                --ls-topping-image: url("#{$path-toppings}#{$file-path-white-large}");
             }
         }
-        
-        &.topping-left-overflow {
-            &::before {
-                left: subtract(0px, floor(math.div($img-width, 2)));
-            }
-            &.topping-large::before {
-                left: subtract(0px, floor(math.div($img-width-large, 2)));
-            }
-        }
-        
-        &.topping-left {
-            &::before {
-                left: 0;
-            }
-        }
-        
-        &.topping-right {
-            &::before {
-                right: 0;
-            }
-        }
-        
-        &.topping-right-overflow {
-            &::before {
-                right: subtract(0px, floor(math.div($img-width, 2)));
-            }
-            &.topping-large::before {
-                right: subtract(0px, floor(math.div($img-width-large, 2)));
-            }
-        }
-        
-        &.topping-right-outside {
-            &::before {
-                right: subtract(-20px, $img-width);
-            }
-            &.topping-large::before {
-                right: subtract(-20px, $img-width-large);
-            }
-        }
-        
     }
-    
+}
+
+#{$topping-hosts} {
+
+    position: relative;
+    // Voir `.bg-topping-*` : garde le décor sous le contenu de la boîte
+    // sans qu’il disparaisse derrière le fond d’un parent.
+    isolation: isolate;
+
+    --ls-topping-height: calc(var(--ls-topping-width) * var(--ls-topping-ratio));
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        z-index: -1;
+        width: var(--ls-topping-width);
+        height: var(--ls-topping-height);
+        background-image: var(--ls-topping-image);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        pointer-events: none;
+    }
+
+    // Positions verticales
+
+    &.topping-before::before {
+        top: calc(-20px - var(--ls-topping-height));
+    }
+
+    &.topping-top-overflow::before {
+        top: calc(var(--ls-topping-height) / -2);
+    }
+
+    &.topping-top::before {
+        top: 0;
+    }
+
+    &.topping-middle::before {
+        top: 50%;
+        margin-top: calc(var(--ls-topping-height) / -2);
+    }
+
+    &.topping-bottom::before {
+        bottom: 0;
+    }
+
+    &.topping-bottom-overflow::before {
+        bottom: calc(var(--ls-topping-height) / -2);
+    }
+
+    &.topping-after::before {
+        bottom: calc(-20px - var(--ls-topping-height));
+    }
+
+    // Positions horizontales
+
+    &.topping-left-outside::before {
+        left: calc(-20px - var(--ls-topping-width));
+    }
+
+    &.topping-left-overflow::before {
+        left: calc(var(--ls-topping-width) / -2);
+    }
+
+    &.topping-left::before {
+        left: 0;
+    }
+
+    &.topping-right::before {
+        right: 0;
+    }
+
+    &.topping-right-overflow::before {
+        right: calc(var(--ls-topping-width) / -2);
+    }
+
+    &.topping-right-outside::before {
+        right: calc(-20px - var(--ls-topping-width));
+    }
+
+    // Sous `lg`, il n’y a plus de marge autour du contenu pour loger un décor
+    // placé complètement à l’extérieur : il serait invisible hors de l’écran.
+    // On le ramène donc à cheval sur le bord, comme les variantes `-overflow`.
+    @include media-breakpoint-down(lg) {
+        &.topping-left-outside::before {
+            left: calc(var(--ls-topping-width) / -2);
+        }
+
+        &.topping-right-outside::before {
+            right: calc(var(--ls-topping-width) / -2);
+        }
+    }
 }
 
 .above-topping {
     position: relative;
     z-index: 5;
-    //overflow-wrap: break-word;
 }
 
 //todo Titraille

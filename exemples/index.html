@@ -15,7 +15,7 @@
             <div class="row bg-ls-vert-fonce">
                 <div class="col">
                     <div class="m-2">
-                        <a href="https://lesscouts.be/" target="_blank" title="Aller sur le site de la fédération Les Scouts">
+                        <a href="https://lesscouts.be/" target="_blank" title="Aller sur le site de la fédération Les Scouts" class="d-inline-block py-1">
                             <i class="bi-chevron-left"></i> Les Scouts asbl
                         </a>
                     </div>
@@ -66,7 +66,7 @@
         <div class="bg-primary">
             <div class="container">
                 <div class="row topping-federation topping-white topping-bottom-overflow topping-right topping-large">
-                    <div class="col-11 offset-md-1 pb-5 mt-5">
+                    <div class="col-12 col-md-11 offset-md-1 pb-5 mt-4 mt-md-5">
                         <h1 class="mb-4 mt-5">Unité <br>Sainte-Anne</h1>
                         <div class="pb-5">
                             <p>Bienvenue sur le site de l’unité fictive Sainte-Anne <br>
@@ -78,12 +78,18 @@
             </div>
         </div>
         <div class="container mb-5">
-            <div class="row mt-3">
-                <div class="col-5 offset-md-1" style="position: relative;">
-                    <svg class="img-fluid" style="position:absolute; margin-top: -100px; z-index: 2;" width="80%" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Image d’illustration" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Une belle photo ici</title><rect width="100%" height="100%" fill="#95C11F"/><text x="50%" y="50%" fill="#0A4275" dx="-25%" style="font-size: 2em;">Une belle photo ici</text></svg>
+            <!--
+                Les deux illustrations se superposent au bandeau bleu à partir de `md`
+                grâce à la marge négative `mt-md-n5`. Sur un téléphone, elles se
+                placent simplement l’une sous l’autre : pas de positionnement
+                absolu, qui ne s’adapterait pas à la largeur de l’écran.
+            -->
+            <div class="row mt-3 g-4">
+                <div class="col-12 col-md-5 offset-md-1 mt-md-n5">
+                    <svg class="img-fluid d-block w-100" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Image d’illustration" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Une belle photo ici</title><rect width="100%" height="100%" fill="#95C11F"/><text x="50%" y="50%" fill="#0A4275" text-anchor="middle" dominant-baseline="middle" style="font-size: 1.5rem;">Une belle photo ici</text></svg>
                 </div>
-                <div class="col-6">
-                    <svg class="img-fluid bg-ls-vert-base bg-opacity-50" width="100%" height="350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Image d’illustration" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Une autre belle photo ici</title><rect width="100%" height="100%" fill="#95C11F"/><text x="50%" y="50%" fill="#0A4275" dx="-25%" style="font-size: 2em;">Une belle photo ici</text></svg>
+                <div class="col-12 col-md-6">
+                    <svg class="img-fluid d-block w-100 bg-ls-vert-base bg-opacity-50" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Image d’illustration" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Une autre belle photo ici</title><rect width="100%" height="100%" fill="#95C11F"/><text x="50%" y="50%" fill="#0A4275" text-anchor="middle" dominant-baseline="middle" style="font-size: 1.5rem;">Une belle photo ici</text></svg>
                 </div>
             </div>
             
@@ -95,64 +101,67 @@
                     </div>
                 </div>
                 <div class="col-md-2 fw-bold text-end">
-                    <a href="#" class="mx-3"><i class="bi-chevron-left"></i></a>
-                    <a href="#" class="mx-3"><i class="bi-chevron-right"></i></a>
+                    <!-- `p-2` donne à ces liens une zone tactile confortable au doigt -->
+                    <a href="#" class="mx-1 p-2 d-inline-block" aria-label="Actualités précédentes"><i class="bi-chevron-left"></i></a>
+                    <a href="#" class="mx-1 p-2 d-inline-block" aria-label="Actualités suivantes"><i class="bi-chevron-right"></i></a>
                 </div>
             </div>
-            <div class="row mt-2 mb-5">
-                <div class="col-md-6">
-                    <div class="card mb-3" style="height: 350px;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <svg class="img-fluid rounded-start bg-ls-vert-base" width="100%" height="350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Image d’illustration" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Une autre belle photo ici</title><rect width="100%" height="100%" fill="#95C11F"/><text x="50%" y="50%" fill="#0A4275" dx="-35%">Une belle photo ici</text></svg>
+            <!--
+                Les cartes n’ont pas de hauteur fixe : `h-100` les fait s’aligner sur
+                la plus haute de la rangée, et `mt-auto` colle le lien « En savoir plus »
+                en bas de la carte. Avec une hauteur fixe, un texte un peu plus long
+                débordait de la carte sur un écran étroit.
+            -->
+            <div class="row mt-2 mb-5 g-4">
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100">
+                        <div class="row g-0 h-100">
+                            <div class="col-12 col-md-4">
+                                <svg class="img-fluid w-100 h-100 bg-ls-vert-base" height="220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Image d’illustration" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Une autre belle photo ici</title><rect width="100%" height="100%" fill="#95C11F"/><text x="50%" y="50%" fill="#0A4275" text-anchor="middle" dominant-baseline="middle">Une belle photo ici</text></svg>
                             </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
+                            <div class="col-12 col-md-8">
+                                <div class="card-body d-flex flex-column h-100">
                                     <p class="small text-muted">29 janvier 2022</p>
                                     <hr>
                                     <h5 class="card-title">Camps été 2022</h5>
                                     <p class="card-text">
                                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam eaque esse expedita facilis impedit labore minima mollitia quidem ratione similique! Culpa, cumque dolore excepturi exercitationem illum nihil pariatur ratione saepe?
                                     </p>
+                                    <p class="card-text text-end mt-auto mb-0">
+                                        <a href="#" class="fw-bold d-inline-block py-2">En savoir plus <i class="bi-chevron-right"></i></a>
+                                    </p>
                                 </div>
-                                <p class="card-text mx-3 mb-3 text-end position-absolute bottom-0 end-0">
-                                    <a href="#" class="fw-bold ">En savoir plus <i class="bi-chevron-right"></i></a>
-                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card mb-3" style="height: 350px;">
-                        <div class="col">
-                            <div class="card-body">
-                                <p class="small text-muted">29 décembre 2021</p>
-                                <hr>
-                                <h5 class="card-title">Bonne année !</h5>
-                                <p class="card-text">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut dignissimos quaerat quo! Aperiam asperiores at eaque earum ipsum iusto laborum, non odit officia quas repellendus sit suscipit vero voluptas voluptatibus.
-                                </p>
-                                <p class="card-text mx-3 mb-3 text-end position-absolute bottom-0 end-0">
-                                    <a href="#" class="fw-bold ">En savoir plus <i class="bi-chevron-right"></i></a>
-                                </p>
-                            </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <p class="small text-muted">29 décembre 2021</p>
+                            <hr>
+                            <h5 class="card-title">Bonne année !</h5>
+                            <p class="card-text">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut dignissimos quaerat quo! Aperiam asperiores at eaque earum ipsum iusto laborum, non odit officia quas repellendus sit suscipit vero voluptas voluptatibus.
+                            </p>
+                            <p class="card-text text-end mt-auto mb-0">
+                                <a href="#" class="fw-bold d-inline-block py-2">En savoir plus <i class="bi-chevron-right"></i></a>
+                            </p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card mb-3" style="height: 350px;">
-                        <div class="col">
-                            <div class="card-body">
-                                <p class="small text-muted">15 décembre 2021</p>
-                                <hr>
-                                <h5 class="card-title">Dernières activités 2021</h5>
-                                <p class="card-text">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet consectetur delectus deserunt dolorem impedit possimus quidem, vitae? Autem dignissimos, est hic labore laboriosam, minus mollitia non qui, reiciendis repudiandae saepe.
-                                </p>
-                                <p class="card-text mx-3 mb-3 text-end position-absolute bottom-0 end-0">
-                                    <a href="#" class="fw-bold ">En savoir plus <i class="bi-chevron-right"></i></a>
-                                </p>
-                            </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <p class="small text-muted">15 décembre 2021</p>
+                            <hr>
+                            <h5 class="card-title">Dernières activités 2021</h5>
+                            <p class="card-text">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet consectetur delectus deserunt dolorem impedit possimus quidem, vitae? Autem dignissimos, est hic labore laboriosam, minus mollitia non qui, reiciendis repudiandae saepe.
+                            </p>
+                            <p class="card-text text-end mt-auto mb-0">
+                                <a href="#" class="fw-bold d-inline-block py-2">En savoir plus <i class="bi-chevron-right"></i></a>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -165,9 +174,9 @@
             </div>
             <div class="row mt-2">
                 <div class="col-md-6">
-                    <svg class="img-fluid" width="100%" height="430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Image d’illustration" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Une carte pour situer les locaux, par exemple</title><rect width="100%" height="100%" fill="#95C11F"/><text x="50%" y="50%" fill="#0A4275" dx="-35%">Une carte pour situer les locaux, par exemple</text></svg>
+                    <svg class="img-fluid" width="100%" height="430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Image d’illustration" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Une carte pour situer les locaux, par exemple</title><rect width="100%" height="100%" fill="#95C11F"/><text x="50%" y="50%" fill="#0A4275" text-anchor="middle" dominant-baseline="middle">Une carte pour situer les locaux, par exemple</text></svg>
                     <p class="text-end">
-                        <a href="#" class="fw-bold">Itinéraire <i class="bi-chevron-right"></i></a>
+                        <a href="#" class="fw-bold d-inline-block py-2">Itinéraire <i class="bi-chevron-right"></i></a>
                     </p>
                 </div>
                 <div class="col-md-5 offset-md-1">
@@ -186,12 +195,12 @@
     <footer class="mt-5">
         <div class="bg-primary py-5">
             <div class="container">
-                <div class="row">
+                <div class="row g-3">
                     <div class="col-md-12">
                         <p class="text-center">L’unité fictive Sainte-Anne est membre de <a href="https://lesscouts.be/">Les Scouts ASBL</a></p>
                     </div>
                     <div class="col-md-3">
-                        <a href="https://lesscouts.be/">
+                        <a href="https://lesscouts.be/" class="d-inline-block">
                             <img src="../images/logos/logo_Federation_blanc_159x61.png" alt="Les Scouts asbl" class="img-fluid">
                         </a>
                     </div>
