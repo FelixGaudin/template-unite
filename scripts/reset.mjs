@@ -81,7 +81,7 @@ function resume() {
 
 function reinitialiser() {
     // Réglages
-    cpSync(join(DEFAUTS, 'unite.json'), REGLAGES);
+    cpSync(join(DEFAUTS, 'reglages/unite.json'), REGLAGES);
 
     // Nom du dépôt dans la configuration de l’administration
     const config = readFileSync(CONFIG_CMS, 'utf8');

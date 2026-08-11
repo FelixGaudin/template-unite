@@ -1,0 +1,3 @@
+Ce dossier reçoit les données du site quand il tourne sur un serveur (voir
+docker-compose.yaml). Son contenu n'est pas versionné : c'est ce qui permet à
+`git pull` de rester propre pendant que l'administration écrit.

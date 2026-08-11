@@ -19,11 +19,27 @@ services:
     build:
       context: .
       target: developpement
-    command: npm run dev
+    # Les contenus d’exemple sont recopiés dans `donnees/` au premier démarrage,
+    # puis plus jamais touchés.
+    # `clean` purge le site généré : sans cela, une page supprimée resterait
+    # accessible par son adresse, Eleventy ne retirant pas ce qu'il a déjà écrit.
+    command: sh -c "node scripts/preparer-donnees.mjs && npm run clean && npm run dev"
     ports:
       - '8080:8080'
     volumes:
       - .:/site
+
+      # Ce que l’administration modifie vit dans `donnees/`, en dehors de ce
+      # que suit git. Sans cela, chaque modification faite depuis /admin
+      # apparaîtrait comme une modification locale du dépôt et empêcherait
+      # `git pull` de s’appliquer sur le serveur.
+      #
+      # Ces trois dossiers sont aussi ce qu’il faut sauvegarder : ils
+      # contiennent tout le travail de l’unité.
+      - ./donnees/contenus:/site/src/contenus
+      - ./donnees/medias:/site/src/medias
+      - ./donnees/reglages:/site/src/_data
+
       # Les dépendances installées dans l’image ne doivent pas être masquées par
       # le node_modules de la machine hôte, qui peut être absent ou contenir des
       # binaires compilés pour un autre système.

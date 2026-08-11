@@ -358,14 +358,84 @@ collections:
                 required: false
                 hint: Par exemple « après 17h en semaine ».
               - { label: 'Adresse email', name: email, widget: string, required: false }
-              - label: Adresse de traitement du formulaire
-                name: formulaire_action
+
+          - label: Formulaire de contact
+            name: formulaire
+            widget: object
+            # Affiché déplié : c’est un réglage qu’on vient chercher exprès.
+            collapsed: false
+            fields:
+              - label: Comment les messages sont-ils envoyés ?
+                name: mode
+                widget: select
+                default: aucun
+                options:
+                  - { label: 'Pas de formulaire — afficher seulement l’adresse email', value: aucun }
+                  - { label: 'Afficher un formulaire Framaforms ou Google Forms', value: integre }
+                  - { label: 'Par un service d’envoi (Formspree, Getform…)', value: service }
+                  - { label: 'Par Netlify Forms (site hébergé chez Netlify)', value: netlify }
+                hint: >
+                  Un site sans serveur ne peut pas envoyer d’email par lui-même.
+                  La solution la plus simple est d’afficher un formulaire créé
+                  ailleurs : les réponses arrivent dans l’outil où tu l’as créé,
+                  sans rien installer. Sans cela, la page Contact affiche
+                  simplement l’adresse email de l’unité.
+
+              - label: Adresse du formulaire ou du service
+                name: adresse
                 widget: string
                 required: false
                 hint: >
-                  Laisse vide si tu n’as pas encore de service d’envoi de
-                  formulaire. La procédure est expliquée dans le fichier
-                  README.md.
+                  Pour un formulaire affiché : l’adresse de ton formulaire
+                  Framaforms ou Google Forms, telle qu’elle apparaît dans la
+                  barre du navigateur. Pour un service d’envoi : l’adresse qu’il
+                  te donne (par exemple https://formspree.io/f/abcdefgh).
+                  Inutile pour Netlify Forms.
+
+              - label: Hauteur du formulaire affiché
+                name: hauteur
+                widget: number
+                required: false
+                default: 900
+                value_type: int
+                min: 300
+                max: 3000
+                hint: >
+                  En pixels. À augmenter si ton formulaire est long et qu’une
+                  barre de défilement apparaît à l’intérieur du cadre.
+
+          - label: Onglets supplémentaires du menu
+            name: liens_navigation
+            widget: list
+            required: false
+            label_singular: Onglet
+            summary: '{{fields.libelle}} → {{fields.adresse}}'
+            hint: >
+              Des onglets à ajouter au menu, en plus des pages du site : la page
+              Facebook de l’unité, un formulaire d’inscription hébergé ailleurs,
+              le site de la fédération… Ils apparaissent après les onglets
+              existants, dans l’ordre de cette liste.
+            fields:
+              - label: Texte de l’onglet
+                name: libelle
+                widget: string
+                hint: Court, pour tenir dans le menu. Par exemple « Facebook ».
+
+              - label: Adresse
+                name: adresse
+                widget: string
+                hint: >
+                  L’adresse complète, en commençant par https://. Tu peux aussi
+                  mettre une adresse interne au site, comme /galeries/.
+
+              - label: Ouvrir dans un nouvel onglet
+                name: nouvelle_fenetre
+                widget: boolean
+                default: true
+                required: false
+                hint: >
+                  À laisser activé pour un site extérieur : le visiteur ne perd
+                  pas le site de l’unité.
 
           - label: Sections
             name: sections

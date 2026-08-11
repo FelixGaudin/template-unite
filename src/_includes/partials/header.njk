@@ -47,6 +47,23 @@
                             <li class="nav-item px-lg-3">
                                 <a class="nav-link text-primary{% if '/contact/' in page.url %} active{% endif %}" href="/contact/">Contact</a>
                             </li>
+                            {#
+                                Onglets ajoutés depuis /admin (Réglages du site →
+                                Onglets supplémentaires du menu). La petite flèche
+                                signale un lien qui quitte le site : elle est
+                                masquée aux lecteurs d'écran, qui annoncent déjà
+                                l'ouverture dans un nouvel onglet.
+                            #}
+                            {% for lien in unite.liens_navigation %}
+                            {% if lien.libelle and lien.adresse %}
+                            <li class="nav-item px-lg-3">
+                                <a class="nav-link text-primary" href="{{ lien.adresse }}"
+                                   {% if lien.nouvelle_fenetre %}target="_blank" rel="noopener"{% endif %}>
+                                    {{ lien.libelle }}{% if lien.nouvelle_fenetre %} <i class="bi-box-arrow-up-right small" aria-hidden="true"></i><span class="visually-hidden">(nouvel onglet)</span>{% endif %}
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>

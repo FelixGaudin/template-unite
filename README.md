@@ -17,8 +17,10 @@ maintenir. Rien à mettre à jour tous les mois, et presque rien à pirater.
 - [Mise en ligne, étape par étape](#mise-en-ligne-étape-par-étape)
 - [Ajouter ou retirer un administrateur](#ajouter-ou-retirer-un-administrateur)
 - [Faire fonctionner le formulaire de contact](#faire-fonctionner-le-formulaire-de-contact)
+- [Ajouter des onglets au menu](#ajouter-des-onglets-au-menu)
 - [Travailler sur le site depuis son ordinateur](#travailler-sur-le-site-depuis-son-ordinateur)
 - [Mettre un mot de passe sur l’administration](#mettre-un-mot-de-passe-sur-ladministration)
+- [Où vont les contenus sur un serveur](#où-vont-les-contenus-sur-un-serveur)
 - [Héberger l’administration sur un serveur](#héberger-ladministration-sur-un-serveur)
 - [Passer le relais au prochain webmaster](#passer-le-relais-au-prochain-webmaster)
 - [Comment c’est rangé](#comment-cest-rangé)
@@ -222,20 +224,57 @@ même liste. Il perd immédiatement l’accès à `/admin`.
 > site, aucune mise à jour de sécurité à suivre, et l’historique des
 > modifications est conservé — on peut revenir en arrière si quelqu’un se trompe.
 
+## Ajouter des onglets au menu
+
+*Réglages du site → Onglets supplémentaires du menu.*
+
+Pour pointer vers la page Facebook de l’unité, un formulaire d’inscription
+hébergé ailleurs, le site de la fédération… Ces onglets s’ajoutent après ceux du
+site, dans l’ordre de la liste.
+
+Coche « Ouvrir dans un nouvel onglet » pour un site extérieur : le visiteur ne
+perd pas le site de l’unité. Une petite flèche signale alors le lien, et les
+lecteurs d’écran annoncent l’ouverture d’un nouvel onglet.
+
+Une adresse interne fonctionne aussi (`/galeries/` par exemple), sans cocher la
+case.
+
 ## Faire fonctionner le formulaire de contact
 
-Un site statique ne peut pas envoyer d’email par lui-même. Tant que ce n’est pas
-configuré, la page Contact affiche l’adresse email de l’unité et un message
-d’explication — rien n’est cassé.
+*Réglages du site → Formulaire de contact.*
 
-Pour activer le formulaire :
+Un site statique ne peut pas envoyer d’email par lui-même : il n’y a pas de
+serveur pour traiter l’envoi. Tant que rien n’est configuré, la page Contact
+affiche simplement l’adresse email de l’unité — rien n’est cassé.
 
-- **Sur Netlify** : le service *Netlify Forms* peut s’en charger. Ajoute
-  l’attribut `data-netlify="true"` au `<form>` dans `src/contact.njk`.
-- **Avec un service externe** (par exemple [Formspree](https://formspree.io/),
-  offre gratuite suffisante pour une unité) : crée un formulaire, récupère son
-  adresse d’envoi, puis colle-la dans `/admin` → *Réglages du site* → *Contact*
-  → « Adresse de traitement du formulaire ».
+Quatre possibilités, dans la liste déroulante :
+
+| Choix | Ce qu’il faut faire | Où arrivent les réponses |
+|---|---|---|
+| **Pas de formulaire** | rien | par email, écrit directement par le visiteur |
+| **Formulaire Framaforms ou Google Forms** | coller l’adresse du formulaire | dans l’outil où tu l’as créé |
+| **Service d’envoi** (Formspree…) | créer un compte, coller l’adresse fournie | dans ta boîte mail |
+| **Netlify Forms** | rien, si le site est hébergé chez Netlify | dans l’interface Netlify |
+
+### Afficher un formulaire Framaforms ou Google Forms
+
+C’est le plus simple, et souvent le plus pratique pour une unité : tu crées le
+formulaire dans un outil que tu connais, tu colles son adresse, et il s’affiche
+dans la page. Les réponses restent dans cet outil, dans un tableau — pas besoin
+de compte supplémentaire ni de boîte mail qui déborde.
+
+Colle l’adresse telle qu’elle apparaît dans la barre du navigateur. Pour Google
+Forms, le paramètre technique nécessaire à l’affichage est ajouté
+automatiquement.
+
+Si une barre de défilement apparaît à l’intérieur du cadre, augmente le champ
+« Hauteur du formulaire affiché ».
+
+> **Un mot sur les données.** Un formulaire d’unité recueille souvent des
+> informations sur des enfants. [Framaforms](https://framaforms.org/) est un
+> service associatif français, hébergé en Europe et sans traçage publicitaire :
+> il est préférable à Google Forms pour ce type de données. Pense aussi à
+> indiquer sur le formulaire à quoi servent les informations demandées.
 
 ## Travailler sur le site depuis son ordinateur
 
@@ -306,16 +345,12 @@ si tu veux les lancer séparément.
 
 C’est le réglage `local_backend: true` de `config.yml` qui autorise ce mode.
 
-### Héberger l’administration sur un serveur
+## Mettre un mot de passe sur l’administration
 
-⚠ **Cette configuration n’a aucun mot de passe.** N’importe qui capable
+⚠ **Sans mot de passe, cette configuration n’en a aucun** : n’importe qui capable
 d’atteindre `/admin` peut modifier le site et déposer des fichiers sur le
-serveur. À réserver à un réseau local de confiance, et **jamais** à exposer sur
-Internet. Pour un site public, utilise plutôt une des méthodes de la section
-[Permettre la connexion à `/admin`](#4-permettre-la-connexion-à-admin), qui
-demandent une identification.
-
-### Mettre un mot de passe sur l’administration
+serveur. Acceptable sur ton propre ordinateur, jamais sur une machine accessible
+par d’autres.
 
 ```bash
 ADMIN_MOT_DE_PASSE='choisis-un-mot-de-passe' docker compose up
@@ -340,7 +375,38 @@ Et surtout : la protection couvre **aussi** `/api/v1`. Protéger seulement la pa
 ne servirait à rien, puisque c’est cette adresse qui écrit dans les fichiers et
 qu’elle est appelable directement.
 
-### Héberger l’administration sur un serveur
+## Où vont les contenus sur un serveur
+
+Quand le site tourne dans Docker, l’administration n’écrit **pas** dans le dépôt
+git, mais dans un dossier `donnees/` à côté :
+
+```
+donnees/
+├── contenus/    actualités, agenda, galeries
+├── medias/      photos envoyées depuis /admin
+└── reglages/    unite.json
+```
+
+Sans cela, chaque modification faite depuis `/admin` apparaîtrait comme une
+modification locale du dépôt, et `git pull` refuserait de s’appliquer sur le
+serveur. Là, tu mets le code à jour sans jamais toucher aux contenus :
+
+```bash
+git pull && docker compose up -d --build
+```
+
+Ce dossier n’est pas versionné. **C’est lui qu’il faut sauvegarder** : il contient
+tout le travail de l’unité, et une simple copie du dossier suffit.
+
+Au premier démarrage il est rempli avec les contenus d’exemple, puis plus jamais
+touché. Pour repartir de zéro, vide-le et redémarre.
+
+> Ce fonctionnement ne concerne que Docker. En hébergement gratuit (Cloudflare
+> Pages, Netlify), les contenus vivent dans le dépôt git et se modifient via
+> GitHub — c’est ce qui donne l’historique et la possibilité de revenir en
+> arrière.
+
+## Héberger l’administration sur un serveur
 
 Une condition reste, et elle ne vient pas du projet mais du navigateur.
 
@@ -417,7 +483,10 @@ Le site occupe la racine du dépôt. Les fichiers du template Les Scouts
 ├── eleventy.config.mjs      Réglages techniques (rarement à toucher)
 ├── netlify.toml             Réglages d’hébergement
 ├── scripts/                 dev.mjs (npm run dev), reset.mjs,
-│                           middleware-admin.mjs (port unique + mot de passe)
+│                           middleware-admin.mjs (port unique + mot de passe),
+│                           preparer-donnees.mjs, surveiller-suppressions.mjs
+│
+├── donnees/                 Contenus du site sur un serveur (non versionné)
 ├── Dockerfile docker-compose.yaml  Pour travailler sans installer Node
 │
 ├── css/ scss/ fonts/ images/   LE TEMPLATE Les Scouts (charte graphique)

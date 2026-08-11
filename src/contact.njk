@@ -25,13 +25,50 @@ chapeau: Une question ? Écris-nous, nous revenons vers toi rapidement.
 
             <h2 class="mt-5">Formulaire</h2>
 
-            {% if unite.contact.formulaire_action %}
             {#
-                Un site statique ne peut pas traiter un envoi de formulaire lui-même.
-                `formulaire_action` doit contenir l'adresse d'un service qui s'en charge
-                (Formspree, Netlify Forms…). Voir README.md.
+                Un site statique ne peut pas traiter un envoi de formulaire
+                lui-même : il faut un service qui s'en charge. Le mode se choisit
+                dans /admin → Réglages du site → Formulaire de contact.
+
+                · service : le formulaire est envoyé à l'adresse fournie
+                · netlify : Netlify intercepte l'envoi, rien à indiquer
+                · aucun   : on affiche l'adresse email, sans formulaire
             #}
-            <form action="{{ unite.contact.formulaire_action }}" method="POST">
+            {% set mode = unite.formulaire.mode %}
+
+            {% if mode == 'integre' and unite.formulaire.adresse %}
+            {#
+                Formulaire créé ailleurs (Framaforms, Google Forms…) et affiché
+                dans la page. Les réponses restent dans l'outil qui l'héberge.
+                `title` est nécessaire : sans lui, un lecteur d'écran annonce
+                seulement « cadre », sans dire de quoi il s'agit.
+            #}
+            <iframe
+                src="{{ unite.formulaire.adresse | adresseIntegrable }}"
+                title="Formulaire de contact"
+                loading="lazy"
+                class="w-100 border-0 d-block"
+                style="height: {{ unite.formulaire.hauteur or 900 }}px;">
+                Ton navigateur n’affiche pas les cadres.
+                <a href="{{ unite.formulaire.adresse }}">Ouvre le formulaire dans un nouvel onglet</a>.
+            </iframe>
+            <p class="small text-muted mt-2">
+                Le formulaire ne s’affiche pas ?
+                <a href="{{ unite.formulaire.adresse }}" target="_blank" rel="noopener">
+                    Ouvre-le dans un nouvel onglet <i class="bi-box-arrow-up-right" aria-hidden="true"></i>
+                </a>
+            </p>
+
+            {% elif mode == 'netlify' or (mode == 'service' and unite.formulaire.adresse) %}
+            <form
+                {% if mode == 'service' %}action="{{ unite.formulaire.adresse }}"{% endif %}
+                method="POST"
+                {% if mode == 'netlify' %}name="contact" data-netlify="true"{% endif %}
+            >
+                {% if mode == 'netlify' %}
+                {# Netlify a besoin de retrouver le nom du formulaire à l'envoi #}
+                <input type="hidden" name="form-name" value="contact">
+                {% endif %}
                 <div class="mb-3">
                     <label for="nom" class="form-label">Ton nom complet</label>
                     <input type="text" class="form-control" id="nom" name="nom" required>
@@ -59,18 +96,27 @@ chapeau: Une question ? Écris-nous, nous revenons vers toi rapidement.
                 <button type="submit" class="btn btn-primary">Envoyer</button>
             </form>
             {% else %}
-            <div class="bg-warning p-3">
+            <p>
+                Écris-nous directement à
+                {% if unite.contact.email %}
+                <a href="mailto:{{ unite.contact.email }}">{{ unite.contact.email }}</a>{% else %}
+                l’adresse de l’unité{% endif %}, nous te répondrons rapidement.
+            </p>
+
+            {% if mode == 'service' or mode == 'integre' %}
+            {#
+                Un mode est choisi mais l'adresse manque : on le signale plutôt
+                que d'afficher un formulaire qui perdrait les messages envoyés.
+            #}
+            <div class="bg-warning p-3 mt-4">
                 <p class="mb-0">
                     <i class="bi-exclamation-triangle-fill me-2"></i>
-                    Le formulaire n’est pas encore branché. En attendant, écris directement à
-                    {% if unite.contact.email %}<a href="mailto:{{ unite.contact.email }}">{{ unite.contact.email }}</a>{% else %}l’adresse de l’unité{% endif %}.
+                    Le formulaire de contact est configuré, mais son adresse n’est pas
+                    renseignée. Complète le champ « Adresse du formulaire ou du service »
+                    dans <em>Réglages du site → Formulaire de contact</em>.
                 </p>
             </div>
-            <p class="small text-muted mt-3">
-                Pour activer le formulaire, renseigne le champ « Adresse de traitement du formulaire »
-                dans l’administration du site (Réglages → Contact). La procédure est expliquée dans
-                le fichier <code>README.md</code>.
-            </p>
+            {% endif %}
             {% endif %}
 
         </div>

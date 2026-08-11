@@ -34,6 +34,13 @@ const processus = [
         args: ['decap-server'],
         env: { PORT: PORT_PONT, BIND_HOST: '127.0.0.1' },
     },
+    {
+        // Eleventy ne reconstruit pas le site quand un contenu est supprimé :
+        // ce petit surveillant s’en charge.
+        nom: 'suppressions',
+        commande: process.execPath,
+        args: ['scripts/surveiller-suppressions.mjs'],
+    },
 ];
 
 let onSArrete = false;

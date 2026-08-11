@@ -105,6 +105,17 @@ export default function (eleventyConfig) {
         valeur ? markdown.renderInline(String(valeur).trim()) : '',
     );
 
+    // Google Forms n’affiche sa version intégrable que si l’adresse porte
+    // `embedded=true`. On l’ajoute pour éviter d’avoir à l’expliquer : coller
+    // l’adresse du formulaire suffit.
+    eleventyConfig.addFilter('adresseIntegrable', (valeur) => {
+        const adresse = String(valeur || '').trim();
+        if (!adresse.includes('docs.google.com/forms') || adresse.includes('embedded=true')) {
+            return adresse;
+        }
+        return adresse + (adresse.includes('?') ? '&' : '?') + 'embedded=true';
+    });
+
     // Actualités, de la plus récente à la plus ancienne
     eleventyConfig.addCollection('actualites', (api) =>
         api
