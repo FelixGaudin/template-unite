@@ -25,7 +25,7 @@ services:
     # accessible par son adresse, Eleventy ne retirant pas ce qu'il a déjà écrit.
     command: sh -c "node scripts/preparer-donnees.mjs && npm run clean && npm run dev"
     ports:
-      - '8080:8080'
+      - '2121:8080'
     volumes:
       - .:/site
 
