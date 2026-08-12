@@ -3,10 +3,15 @@
  *
  * Ils permettent de tout servir sur un seul port (8080 par défaut) :
  *
- *   /api/v1   → transmis au pont d’écriture, qui n’écoute que sur la machine
- *               locale et n’est donc pas joignable de l’extérieur
- *   /admin    → protégé par un mot de passe, si `ADMIN_MOT_DE_PASSE` est défini
- *   le reste  → le site public, servi normalement
+ *   /admin/api/v1 → transmis au pont d’écriture, qui n’écoute que sur la
+ *                   machine locale et n’est donc pas joignable de l’extérieur
+ *   /admin        → l’interface d’administration
+ *   le reste      → le site public, servi normalement
+ *
+ * Tout ce qui modifie le site vit sous `/admin` : il suffit donc de protéger
+ * cette seule adresse, ici avec `ADMIN_MOT_DE_PASSE`, ou en amont avec un
+ * reverse proxy (voir « Protéger l’administration » dans le README). Une
+ * protection posée sur `/admin*` ne laisse rien passer à côté.
  *
  * Deux conséquences utiles au fait de tout passer par la même adresse :
  * il n’y a plus de requête entre deux origines différentes — donc plus rien à
@@ -18,8 +23,13 @@ import { timingSafeEqual } from 'node:crypto';
 /** Port du pont d’écriture, qui reste interne à la machine. */
 export const PORT_PONT = Number(process.env.PONT_PORT || 8082);
 
-const CHEMIN_API = '/api/v1';
 const CHEMIN_ADMIN = '/admin';
+
+/** L’adresse de l’API vue du navigateur, sous /admin pour être protégée avec lui. */
+const CHEMIN_API = '/admin/api/v1';
+
+/** Celle qu’expose le pont, qui ne connaît que la sienne. */
+const CHEMIN_API_PONT = '/api/v1';
 
 /** Comparaison à durée constante, pour ne pas laisser deviner le mot de passe. */
 function egal(a, b) {
@@ -37,10 +47,10 @@ function demanderIdentifiants(res) {
 }
 
 /**
- * Exige le mot de passe sur l’administration **et** sur son API.
+ * Demande le mot de passe sur `/admin`, quand `ADMIN_MOT_DE_PASSE` est défini.
  *
- * Protéger seulement la page ne servirait à rien : c’est `/api/v1` qui écrit
- * dans les fichiers, et il est appelable directement.
+ * Laissé vide, rien n’est demandé : c’est ce qu’il faut quand la protection est
+ * assurée en amont par un reverse proxy, qui protège la même adresse.
  */
 export function protectionAdmin() {
     const motDePasse = process.env.ADMIN_MOT_DE_PASSE || '';
@@ -48,7 +58,7 @@ export function protectionAdmin() {
 
     return function (req, res, next) {
         const chemin = (req.url || '').split('?')[0];
-        const concerne = chemin === CHEMIN_ADMIN || chemin.startsWith(CHEMIN_ADMIN + '/') || chemin.startsWith(CHEMIN_API);
+        const concerne = chemin === CHEMIN_ADMIN || chemin.startsWith(CHEMIN_ADMIN + '/');
 
         if (!concerne || !motDePasse) return next();
 
@@ -68,14 +78,14 @@ export function protectionAdmin() {
 /** Transmet les appels de l’administration au pont d’écriture. */
 export function relaisPont() {
     return function (req, res, next) {
-        const chemin = (req.url || '').split('?')[0];
-        if (!chemin.startsWith(CHEMIN_API)) return next();
+        const [chemin, requete] = (req.url || '').split('?');
+        if (chemin !== CHEMIN_API) return next();
 
         const amont = request(
             {
                 host: '127.0.0.1',
                 port: PORT_PONT,
-                path: req.url,
+                path: CHEMIN_API_PONT + (requete ? `?${requete}` : ''),
                 method: req.method,
                 headers: { ...req.headers, host: `127.0.0.1:${PORT_PONT}` },
             },

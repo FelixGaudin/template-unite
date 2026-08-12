@@ -23,8 +23,9 @@ locale: fr
 #
 # Deux points à connaître avant d’ouvrir l’administration à d’autres :
 #
-#   · ce mode n’a **aucun mot de passe** par défaut. Pour en mettre un, voir
-#     « Mettre un mot de passe sur l’administration » dans le README ;
+#   · ce mode n’a **aucune protection** par défaut. Pour en poser une — mot de
+#     passe ou reverse proxy — voir « Protéger l’administration » dans le
+#     README ;
 #   · les navigateurs réservent certaines fonctions de sécurité (dont
 #     `crypto.randomUUID`, dont l’outil a besoin) aux « contextes sécurisés » :
 #     HTTPS, `localhost` ou `127.0.0.1`. En HTTP sur une adresse IP,

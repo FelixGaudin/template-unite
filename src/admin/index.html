@@ -49,13 +49,18 @@
             adresse, quel que soit l’endroit d’où le site est servi — un
             ordinateur, un serveur du réseau, un port différent.
 
+            Elle est placée sous /admin, et non à la racine, parce que c’est elle
+            qui écrit dans les fichiers : protéger `/admin` — par mot de passe ou
+            par un reverse proxy — couvre alors l’interface et l’écriture d’un
+            seul geste, sans qu’une seconde règle puisse être oubliée.
+
             Ces valeurs viennent compléter config.yml, qui reste la référence
             pour tout le reste.
         */
         CMS.init({
             config: {
                 local_backend: {
-                    url: window.location.origin + '/api/v1',
+                    url: window.location.origin + '/admin/api/v1',
                     allowed_hosts: [window.location.hostname],
                 },
             },

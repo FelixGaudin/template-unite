@@ -51,9 +51,9 @@ services:
     # `npm run dev` sont alors correctement arrêtés et nettoyés.
     init: true
     environment:
-      # Protège /admin **et** son API par un mot de passe. Laissé vide,
-      # l’administration est ouverte — acceptable sur son propre ordinateur,
-      # jamais sur une machine accessible par d’autres.
+      # Protège /admin par un mot de passe. Laissé vide, l’administration est
+      # ouverte — acceptable sur son propre ordinateur, jamais sur une machine
+      # accessible par d’autres.
       #
       # Le mot de passe se donne au lancement, pour ne pas se retrouver dans un
       # fichier versionné :
@@ -61,6 +61,10 @@ services:
       #   ADMIN_MOT_DE_PASSE='choisis-un-mot-de-passe' docker compose up
       #
       # Ou dans un fichier `.env` à côté de ce fichier, qui n’est pas versionné.
+      #
+      # À laisser vide si un reverse proxy protège déjà `/admin*` : c’est la
+      # seule adresse à couvrir, l’API d’écriture se trouvant sous elle. Voir
+      # « Protéger l’administration » dans le README.
       ADMIN_MOT_DE_PASSE: '${ADMIN_MOT_DE_PASSE:-}'
       # L’identifiant à saisir avec le mot de passe. « admin » par défaut.
       ADMIN_UTILISATEUR: '${ADMIN_UTILISATEUR:-admin}'

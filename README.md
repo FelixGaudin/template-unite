@@ -19,7 +19,7 @@ maintenir. Rien à mettre à jour tous les mois, et presque rien à pirater.
 - [Faire fonctionner le formulaire de contact](#faire-fonctionner-le-formulaire-de-contact)
 - [Ajouter des onglets au menu](#ajouter-des-onglets-au-menu)
 - [Travailler sur le site depuis son ordinateur](#travailler-sur-le-site-depuis-son-ordinateur)
-- [Mettre un mot de passe sur l’administration](#mettre-un-mot-de-passe-sur-ladministration)
+- [Protéger l’administration](#protéger-ladministration)
 - [Où vont les contenus sur un serveur](#où-vont-les-contenus-sur-un-serveur)
 - [Héberger l’administration sur un serveur](#héberger-ladministration-sur-un-serveur)
 - [Passer le relais au prochain webmaster](#passer-le-relais-au-prochain-webmaster)
@@ -345,35 +345,68 @@ si tu veux les lancer séparément.
 
 C’est le réglage `local_backend: true` de `config.yml` qui autorise ce mode.
 
-## Mettre un mot de passe sur l’administration
+## Protéger l’administration
 
-⚠ **Sans mot de passe, cette configuration n’en a aucun** : n’importe qui capable
-d’atteindre `/admin` peut modifier le site et déposer des fichiers sur le
-serveur. Acceptable sur ton propre ordinateur, jamais sur une machine accessible
-par d’autres.
+⚠ **Par défaut, il n’y a aucune protection** : n’importe qui capable d’atteindre
+`/admin` peut modifier le site et déposer des fichiers sur le serveur.
+Acceptable sur ton propre ordinateur, jamais sur une machine accessible par
+d’autres.
+
+**Une seule adresse est à protéger : `/admin`.** Tout ce qui modifie le site
+passe par là, y compris l’API d’écriture (`/admin/api/v1`) qu’utilise
+l’interface. Une règle sur `/admin*` ne laisse donc rien passer à côté, et le
+reste du site demeure public.
+
+Deux façons de faire, au choix.
+
+### Avec le mot de passe intégré
 
 ```bash
 ADMIN_MOT_DE_PASSE='choisis-un-mot-de-passe' docker compose up
 ```
 
-C’est tout. Le site reste public ; `/admin` **et son API d’écriture** demandent
-alors un identifiant (`admin` par défaut, modifiable avec `ADMIN_UTILISATEUR`).
+C’est tout. `/admin` demande alors un identifiant (`admin` par défaut,
+modifiable avec `ADMIN_UTILISATEUR`). Le mot de passe se donne au lancement, ou
+dans un fichier `.env` à côté de `docker-compose.yaml` — ce fichier n’est pas
+versionné.
 
-Le mot de passe se donne au lancement, ou dans un fichier `.env` à côté de
-`docker-compose.yaml` — ce fichier n’est pas versionné.
+### Avec un reverse proxy
 
-> **Pourquoi pas dans `config.yml` ?** Parce que ce fichier est servi
-> publiquement, comme le reste du site : essaie
+Si un reverse proxy est déjà devant le site — et il l’est souvent, ne serait-ce
+que pour le HTTPS — autant lui confier la protection : il sait faire mieux
+qu’un mot de passe unique (comptes séparés, restriction par réseau, connexion
+par un fournisseur d’identité…).
+
+Laisse simplement `ADMIN_MOT_DE_PASSE` vide : le site ne demande plus rien, et
+protège `/admin*` en amont. Avec [Caddy](https://caddyserver.com/), qui s’occupe
+aussi du certificat :
+
+```caddyfile
+site-de-mon-unite.be {
+	# Génère le mot de passe avec : caddy hash-password
+	@admin path /admin /admin/*
+	basic_auth @admin {
+		webmaster $2a$14$Zkx19XLiW6VYouLHR5NmfOFU0z2GTNmpkT.bybAJmVQ4XeCq0.Mim
+	}
+
+	reverse_proxy localhost:8080
+}
+```
+
+`basic_auth` n’est qu’un exemple : `forward_auth` vers Authelia, Authentik ou
+tout autre fournisseur se pose au même endroit, sur le même `@admin`. Ce qui
+compte est le motif, qui doit couvrir `/admin` **et** `/admin/*` : `path /admin`
+seul ne correspond qu’à cette adresse exacte, et laisserait ouverts aussi bien
+l’interface que l’API qui écrit les fichiers.
+
+> **Pourquoi pas un mot de passe dans `config.yml` ?** Parce que ce fichier est
+> servi publiquement, comme le reste du site : essaie
 > `curl https://ton-site/admin/config.yml`. Un mot de passe écrit dedans serait
 > lisible par tout le monde, et se retrouverait en plus dans l’historique du
 > dépôt. Plus généralement, aucune protection écrite dans le site lui-même n’en
 > est une : le code s’exécute dans le navigateur du visiteur, qui peut le
-> contourner. C’est le serveur qui doit refuser la requête, et c’est ce que fait
-> le réglage ci-dessus.
-
-Et surtout : la protection couvre **aussi** `/api/v1`. Protéger seulement la page
-ne servirait à rien, puisque c’est cette adresse qui écrit dans les fichiers et
-qu’elle est appelable directement.
+> contourner. C’est le serveur — ou le proxy devant lui — qui doit refuser la
+> requête.
 
 ## Où vont les contenus sur un serveur
 
@@ -418,7 +451,9 @@ configuration »**, quels que soient tes autres réglages. Le site public, lui,
 fonctionne très bien en HTTP : seule l’administration est concernée.
 
 Le plus simple est un reverse proxy qui s’occupe du certificat, par exemple
-[Caddy](https://caddyserver.com/), qui en génère un tout seul.
+[Caddy](https://caddyserver.com/), qui en génère un tout seul. Autant lui
+confier aussi la protection de `/admin` — voir
+[Protéger l’administration](#protéger-ladministration).
 
 C’est aussi ce qui rend le mot de passe sérieux : en HTTP, il circule en clair
 sur le réseau.
