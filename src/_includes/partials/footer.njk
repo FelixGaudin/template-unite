@@ -25,10 +25,30 @@
                     <p class="fw-bold mb-1">{{ unite.locaux.nom }}</p>
                     <address class="mb-0">{{ unite.locaux.adresse }}</address>
                 </div>
+                {#
+                    Colonnes libres, remplies depuis /admin. Chacune peut porter
+                    un texte, une liste de liens, ou les deux. Même traitement
+                    des liens extérieurs que dans le menu (voir header.njk) : la
+                    flèche signale qu'on quitte le site, et elle est masquée aux
+                    lecteurs d'écran, qui annoncent déjà le nouvel onglet.
+                #}
                 {% for colonne in unite.pied_de_page.colonnes %}
                 <div class="col-md-3">
                     <p class="fw-bold mb-1">{{ colonne.titre }}</p>
-                    <p class="mb-0">{{ colonne.texte }}</p>
+                    {% if colonne.texte %}<p class="mb-2">{{ colonne.texte }}</p>{% endif %}
+                    {% if colonne.liens %}
+                    <ul class="list-unstyled mb-0">
+                        {% for lien in colonne.liens %}
+                        {% if lien.libelle and lien.adresse %}
+                        <li>
+                            <a href="{{ lien.adresse }}"{% if lien.nouvelle_fenetre %} target="_blank" rel="noopener"{% endif %}>
+                                {{ lien.libelle }}{% if lien.nouvelle_fenetre %} <i class="bi-box-arrow-up-right small" aria-hidden="true"></i><span class="visually-hidden">(nouvel onglet)</span>{% endif %}
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>

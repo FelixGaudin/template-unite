@@ -235,11 +235,28 @@
                             'div',
                             { className: 'row g-3' },
                             colonnes.map(function (colonne, i) {
+                                var liens = colonne.liens || [];
                                 return h(
                                     'div',
                                     { className: 'col-6', key: i },
                                     h('p', { className: 'fw-bold small mb-1' }, colonne.titre || '—'),
-                                    h('p', { className: 'small mb-0' }, colonne.texte || ''),
+                                    colonne.texte ? h('p', { className: 'small mb-2' }, colonne.texte) : null,
+                                    // Les liens sont montrés mais pas cliquables : un clic
+                                    // dans le volet d’aperçu quitterait l’administration,
+                                    // en abandonnant les modifications en cours.
+                                    liens.length
+                                        ? h(
+                                              'ul',
+                                              { className: 'list-unstyled small mb-0' },
+                                              liens.map(function (lien, j) {
+                                                  return h(
+                                                      'li',
+                                                      { className: 'text-decoration-underline', key: j },
+                                                      lien.libelle || lien.adresse || '—',
+                                                  );
+                                              }),
+                                          )
+                                        : null,
                                 );
                             }),
                         ),

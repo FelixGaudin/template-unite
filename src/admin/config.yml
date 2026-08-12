@@ -485,4 +485,40 @@ collections:
                 summary: '{{fields.titre}}'
                 fields:
                   - { label: 'Titre', name: titre, widget: string }
-                  - { label: 'Texte', name: texte, widget: text }
+                  - label: Texte
+                    name: texte
+                    widget: text
+                    required: false
+                    hint: >
+                      Facultatif : une colonne peut ne contenir que des liens.
+
+                  - label: Liens
+                    name: liens
+                    widget: list
+                    required: false
+                    label_singular: Lien
+                    summary: '{{fields.libelle}} → {{fields.adresse}}'
+                    hint: >
+                      Affichés sous le texte, l’un sous l’autre : page Facebook,
+                      règlement en PDF, formulaire d’inscription…
+                    fields:
+                      - label: Texte du lien
+                        name: libelle
+                        widget: string
+                        hint: Ce sur quoi on clique. Par exemple « Notre page Facebook ».
+
+                      - label: Adresse
+                        name: adresse
+                        widget: string
+                        hint: >
+                          L’adresse complète, en commençant par https://. Tu peux aussi
+                          mettre une adresse interne au site, comme /contact/.
+
+                      - label: Ouvrir dans un nouvel onglet
+                        name: nouvelle_fenetre
+                        widget: boolean
+                        default: true
+                        required: false
+                        hint: >
+                          À laisser activé pour un site extérieur : le visiteur ne perd
+                          pas le site de l’unité.
