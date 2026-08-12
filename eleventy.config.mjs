@@ -105,6 +105,16 @@ export default function (eleventyConfig) {
         valeur ? markdown.renderInline(String(valeur).trim()) : '',
     );
 
+    // Les champs « texte » de l’administration sont des zones de saisie libres,
+    // où l’on va naturellement à la ligne. En HTML, un retour à la ligne ne vaut
+    // qu’une espace : sans ce filtre, tout se retrouverait sur un seul bloc.
+    //
+    // Le texte est échappé ici, avant l’ajout des <br>, parce qu’il est ensuite
+    // inséré tel quel dans la page avec `safe`.
+    eleventyConfig.addFilter('sautsDeLigne', (valeur) =>
+        valeur ? markdown.utils.escapeHtml(String(valeur).trim()).replace(/\r\n|\r|\n/g, '<br>') : '',
+    );
+
     // Google Forms n’affiche sa version intégrable que si l’adresse porte
     // `embedded=true`. On l’ajoute pour éviter d’avoir à l’expliquer : coller
     // l’adresse du formulaire suffit.

@@ -24,6 +24,9 @@
             '  text-transform: uppercase; color: #6c757d; padding: 8px 12px;',
             '  border-bottom: 1px solid #dee2e6; background: #f8f9fa; }',
             '.apercu-vide { color: #6c757d; font-style: italic; }',
+            // Les champs « texte » gardent leurs retours à la ligne, comme le
+            // site, qui les convertit en <br> (filtre `sautsDeLigne`).
+            '.apercu-texte { white-space: pre-line; }',
         ].join('\n'),
         { raw: true },
     );
@@ -84,7 +87,7 @@
                         'div',
                         { className: 'col-12 pb-5 pt-4' },
                         h('h1', { className: 'mb-3' }, titre || 'Nom de l’unité'),
-                        chapeau ? h('p', { className: 'mb-0' }, chapeau) : null,
+                        chapeau ? h('p', { className: 'mb-0 apercu-texte' }, chapeau) : null,
                     ),
                 ),
             ),
@@ -136,7 +139,9 @@
                     'div',
                     { className: 'container my-4' },
 
-                    d.presentation ? h('p', {}, d.presentation) : absent('Pas encore de texte de présentation.'),
+                    d.presentation
+                        ? h('p', { className: 'apercu-texte' }, d.presentation)
+                        : absent('Pas encore de texte de présentation.'),
 
                     h('h2', { className: 'mt-5' }, 'informations pratiques'),
                     h(
@@ -147,7 +152,9 @@
                             { className: 'col-12 col-md-6' },
                             h('h3', { className: 'h5' }, locaux.nom || 'Nos locaux'),
                             locaux.adresse ? h('address', { className: 'mb-2' }, locaux.adresse) : null,
-                            locaux.informations ? h('p', { className: 'mb-2' }, locaux.informations) : null,
+                            locaux.informations
+                                ? h('p', { className: 'mb-2 apercu-texte' }, locaux.informations)
+                                : null,
                             locaux.lien_itineraire
                                 ? h('p', { className: 'fw-bold mb-0' }, 'Itinéraire ›')
                                 : null,
@@ -240,7 +247,7 @@
                                     'div',
                                     { className: 'col-6', key: i },
                                     h('p', { className: 'fw-bold small mb-1' }, colonne.titre || '—'),
-                                    colonne.texte ? h('p', { className: 'small mb-2' }, colonne.texte) : null,
+                                    colonne.texte ? h('p', { className: 'small mb-2 apercu-texte' }, colonne.texte) : null,
                                     // Les liens sont montrés mais pas cliquables : un clic
                                     // dans le volet d’aperçu quitterait l’administration,
                                     // en abandonnant les modifications en cours.
@@ -321,7 +328,7 @@
                     ligne('Heure', d.heure),
                     ligne('Lieu', d.lieu),
                     ligne('Section', d.section),
-                    d.description ? h('p', { className: 'mt-3' }, d.description) : null,
+                    d.description ? h('p', { className: 'mt-3 apercu-texte' }, d.description) : null,
                     h('div', {}, this.props.widgetFor('body')),
                 ),
             );

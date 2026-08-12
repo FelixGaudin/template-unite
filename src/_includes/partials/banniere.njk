@@ -13,7 +13,7 @@
                 <h1 class="mb-4 mt-md-5">{{ titre_banniere or titre }}</h1>
                 {% if chapeau %}
                 <div class="pb-5">
-                    <p class="mb-0">{{ chapeau }}</p>
+                    <p class="mb-0">{{ chapeau | sautsDeLigne | safe }}</p>
                 </div>
                 {% endif %}
             </div>

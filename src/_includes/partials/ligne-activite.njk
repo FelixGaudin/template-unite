@@ -22,7 +22,7 @@
                     {% if activite.data.lieu %}<span><i class="bi-geo-alt"></i> {{ activite.data.lieu }}</span>{% endif %}
                 </p>
                 {% if activite.data.description %}
-                <p class="mb-0">{{ activite.data.description }}</p>
+                <p class="mb-0">{{ activite.data.description | sautsDeLigne | safe }}</p>
                 {% endif %}
             </div>
         </div>

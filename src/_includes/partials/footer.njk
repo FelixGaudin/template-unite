@@ -35,7 +35,7 @@
                 {% for colonne in unite.pied_de_page.colonnes %}
                 <div class="col-md-3">
                     <p class="fw-bold mb-1">{{ colonne.titre }}</p>
-                    {% if colonne.texte %}<p class="mb-2">{{ colonne.texte }}</p>{% endif %}
+                    {% if colonne.texte %}<p class="mb-2">{{ colonne.texte | sautsDeLigne | safe }}</p>{% endif %}
                     {% if colonne.liens %}
                     <ul class="list-unstyled mb-0">
                         {% for lien in colonne.liens %}

@@ -30,7 +30,7 @@ layout: layouts/base.njk
                 {% endif %}
             </dl>
 
-            {% if description %}<p>{{ description }}</p>{% endif %}
+            {% if description %}<p>{{ description | sautsDeLigne | safe }}</p>{% endif %}
 
             {{ content | safe }}
 

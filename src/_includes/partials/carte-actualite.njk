@@ -14,7 +14,7 @@
         <hr>
         <h3 class="card-title h5">{{ actu.data.titre }}</h3>
         {% if actu.data.resume %}
-        <p class="card-text">{{ actu.data.resume }}</p>
+        <p class="card-text">{{ actu.data.resume | sautsDeLigne | safe }}</p>
         {% endif %}
         <p class="card-text text-end mt-auto mb-0">
             <a href="{{ actu.url }}" class="fw-bold d-inline-block py-2">En savoir plus <i class="bi-chevron-right"></i></a>
